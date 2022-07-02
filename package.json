@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "dateformat": "^5.0.3",
     "eslint": "8.17.0",
     "next": "12.1.6",

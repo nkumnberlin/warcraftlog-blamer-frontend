@@ -69,7 +69,7 @@ const Home: NextPage = () => {
 
       <Main>
         <Header>WarcraftLog Blamer</Header>
-        <button type="button" onClick={() => router.push('/aGBwFt9j2g18KXq6')}>Goto report</button>
+        <button type="button" onClick={() => router.push('/aAXDYPG7MxbQ6WKV')}>Goto report</button>
         <SearchContainer>
           <Input
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
