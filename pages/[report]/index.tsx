@@ -2,8 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import { IRaidId } from '../../interfaces';
 import { BossReport, GeneralData } from '../../components/reports';
+import { IBossData, ISingleReport } from '../../interfaces';
+
+export interface IRaidId {
+  singleReport: ISingleReport,
+  bossData: [IBossData]
+}
 
 const Main = styled.div`
   padding: 4rem 0;

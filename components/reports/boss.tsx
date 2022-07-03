@@ -3,6 +3,7 @@ import dateFormat from 'dateformat';
 import styled from 'styled-components';
 import { NextRouter, useRouter } from 'next/router';
 import { IBossData, IOnlyBossFight } from '../../interfaces';
+import FightDetails from '../fight/fightDetails';
 
 const Item = styled.div<{ isListItem?: boolean }>`
   display: flex;
@@ -12,6 +13,7 @@ const Item = styled.div<{ isListItem?: boolean }>`
   cursor: pointer;
   width: 80%;
   margin: 0 auto;
+  padding: 0.5rem 0 0.5rem 0;
   border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
 
   :hover {
@@ -40,15 +42,7 @@ const Fight = ({ fight, router, report }:IFight) => (
     key={fight.id}
     onClick={() => router.push('/[report]/[fight]', `${report}/${fight.id}?encounterID=${fight.encounterID}`)}
   >
-    <ListItem>{fight.name}</ListItem>
-    <ListItem>
-      {fight.kill ? 'Kill' : `HP left: ${fight.fightPercentage}%`}
-    </ListItem>
-    <ListItem>
-      Time of Fight:
-      {' '}
-      {dateFormat(fight.startTime + fight.endTime, 'HH:MM:ss')}
-    </ListItem>
+    <FightDetails {...fight} />
   </Item>
 );
 

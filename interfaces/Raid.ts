@@ -1,12 +1,3 @@
-export interface ISingleReport {
-    endTime: number;
-    startTime: number;
-    zone: {
-        name: string
-    }
-    guild: { name: string; id: number; faction: { name: string } };
-}
-
 export interface IOnlyBossFight {
     difficulty: number;
     name: string;
@@ -18,13 +9,17 @@ export interface IOnlyBossFight {
     encounterID: string
 }
 
+export interface ISingleReport {
+    endTime: number;
+    startTime: number;
+    zone: {
+        name: string
+    }
+    fights?: [IOnlyBossFight],
+    guild: { name: string; id: number; faction: { name: string } };
+}
 export interface IBossData {
     kill: IOnlyBossFight | undefined,
     trys: [IOnlyBossFight] | undefined,
     infos: IOnlyBossFight
-}
-
-export interface IRaidId {
-    singleReport: ISingleReport,
-    bossData: [IBossData]
 }
