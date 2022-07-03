@@ -16,13 +16,13 @@ const CharacterInfo = styled.div`
 
 const CharacterList = ({ fight }: IFightDetails) => (
   <CharacterContainer>
-    {fight.friendlyPlayers.map((player: any) => (
-      <CharacterInfo key={player} onClick={() => console.log({ id: 'player', value: player })}>
-        Name:
-        {' '}
-        {player}
-      </CharacterInfo>
-    ))}
+    {/* {fight.friendlyPlayers.map((player: any) => ( */}
+    {/*  <CharacterInfo key={player} onClick={() => console.log({ id: 'player', value: player })}> */}
+    {/*    Name: */}
+    {/*    {' '} */}
+    {/*    {player} */}
+    {/*  </CharacterInfo> */}
+    {/* ))} */}
   </CharacterContainer>
 );
 

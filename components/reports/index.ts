@@ -1,3 +1,4 @@
 import BossReport from './boss';
+import GeneralData from './generalData';
 
-export { BossReport };
+export { BossReport, GeneralData };

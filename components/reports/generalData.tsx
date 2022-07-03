@@ -8,11 +8,15 @@ const Item = styled.div<{ isListItem?: boolean }>`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  cursor: pointer;
   border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
 `;
-const Fight = ({ startTime, endTime, guild }: ISingleReport) => (
+const GeneralData = ({
+  startTime, endTime, guild, zone,
+}: ISingleReport) => (
   <Item>
+    <p>
+      {zone.name}
+    </p>
     <p>
       From:
       {' '}
@@ -36,4 +40,4 @@ const Fight = ({ startTime, endTime, guild }: ISingleReport) => (
   </Item>
 );
 
-export default Fight;
+export default GeneralData;

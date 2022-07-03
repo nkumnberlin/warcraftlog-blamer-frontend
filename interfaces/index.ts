@@ -1,8 +1,8 @@
 import { IFight, IFightDetails } from './Fight';
 import {
-  IRaidId, IOnlyBossFights, IOnlyBossFight, ISingleReport,
+  IRaidId, IBossData, IOnlyBossFight, ISingleReport,
 } from './Raid';
 
 export type {
-  IRaidId, IFight, IFightDetails, IOnlyBossFights, IOnlyBossFight, ISingleReport,
+  IRaidId, IFight, IFightDetails, IBossData, IOnlyBossFight, ISingleReport,
 };
