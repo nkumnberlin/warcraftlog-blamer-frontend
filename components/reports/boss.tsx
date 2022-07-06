@@ -1,5 +1,4 @@
 import React from 'react';
-import dateFormat from 'dateformat';
 import styled from 'styled-components';
 import { NextRouter, useRouter } from 'next/router';
 import { IBossData, IOnlyBossFight } from '../../interfaces';
@@ -8,10 +7,9 @@ import FightDetails from '../fight/fightDetails';
 const Item = styled.div<{ isListItem?: boolean }>`
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  width: 80%;
   margin: 0 auto;
   padding: 0.5rem 0 0.5rem 0;
   border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
@@ -19,6 +17,15 @@ const Item = styled.div<{ isListItem?: boolean }>`
   :hover {
     background: #444444;
   }
+`;
+
+const BossInfoWrapper = styled.div<{isKilled?: boolean}>`
+  margin: 2rem 0 0 0;
+  background: ${(props) => (props.isKilled ? 'green' : 'tomato')};
+`;
+
+const FightContainer = styled.div`
+  padding-left: 5rem;
 `;
 
 const Reports = styled.div`
@@ -52,12 +59,14 @@ interface IBossInfo {
 }
 
 const BossInfo = ({ bossInfo, kill }: IBossInfo) => (
-  <Item isListItem key={bossInfo.id}>
-    <ListItem>{bossInfo.name}</ListItem>
-    <ListItem>
-      {kill ? 'Killed' : 'Alive'}
-    </ListItem>
-  </Item>
+  <BossInfoWrapper isKilled={kill}>
+    <Item isListItem key={bossInfo.id}>
+      <ListItem>{bossInfo.name}</ListItem>
+      <ListItem>
+        {kill ? 'Killed' : 'Alive'}
+      </ListItem>
+    </Item>
+  </BossInfoWrapper>
 );
 
 export interface IBossReport {
@@ -71,7 +80,7 @@ const BossReport = ({
   return (
     <Reports>
       {bossData.map((boss) => (
-        <>
+        <FightContainer>
           <BossInfo bossInfo={boss.infos} kill={!!boss?.kill} />
           {boss.kill && (
           <Fight
@@ -87,7 +96,7 @@ const BossReport = ({
               router={router}
             />
           ))}
-        </>
+        </FightContainer>
       ))}
     </Reports>
   );

@@ -39,7 +39,7 @@ const Player = styled.div`
 `;
 
 const PlayerInfo = styled.p`
-  padding: 0 0.5rem 0 0.5rem;
+  padding: 0 0.5rem 0 0;
   min-width: 10rem;
   max-width: 30rem;
 `;
