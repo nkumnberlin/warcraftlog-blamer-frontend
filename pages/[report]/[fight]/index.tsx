@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { Simulate } from 'react-dom/test-utils';
 import {
   IPlayerDetails, ISingleReport,
 } from '../../../interfaces';
@@ -27,6 +28,12 @@ const Content = styled.div`
   }
 `;
 
+const PlayerDetail = styled.div`
+  display: flex;
+  flex-display: row;
+  height: 100vh;
+`;
+
 interface IDisplayFight {
   singleReport: ISingleReport
   playerDetails: IPlayerDetails
@@ -39,6 +46,16 @@ const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
     router.push(router);
   };
 
+  useEffect(() => {
+    const playerContainer = document.getElementById('playerDetails');
+    console.log(playerContainer);
+    if (router.query.playerID !== undefined && playerContainer !== null) {
+      playerContainer.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  }, [router.query.playerID]);
+
   return (
     <Main>
       <NavBar>
@@ -50,6 +67,11 @@ const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
         <PlayerTypeList playerDetails={playerDetails} selectPlayer={selectPlayer} />
         <FeatureFilter />
       </Content>
+      {router.query?.playerID && (
+      <PlayerDetail id="playerDetails">
+        h2
+      </PlayerDetail>
+      )}
     </Main>
   );
 };
