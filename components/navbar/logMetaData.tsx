@@ -1,32 +1,33 @@
 import React from 'react';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
-import { ISingleReport } from '../../interfaces/Raid';
+import { ISingleReport } from '../../interfaces';
 
-const Item = styled.div<{ isListItem?: boolean }>`
+const Item = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
   justify-content: space-evenly;
-  align-items: center;
-  border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
-  margin: 1rem 0 1rem 0;
 `;
-const GeneralData = ({
+
+const LogMetaData = ({
   startTime, endTime, guild, zone,
 }: ISingleReport) => (
   <Item>
     <p>
+      Zone:
+      {' '}
       {zone.name}
     </p>
     <p>
       From:
       {' '}
-      {dateFormat(startTime, 'dS, mmmm, yyyy, HH:MM:ss')}
+      {dateFormat(startTime, 'HH:MM:ss')}
     </p>
     <p>
       Till:
       {' '}
-      {dateFormat(endTime, 'dS, mmmm, yyyy, HH:MM:ss')}
+      {dateFormat(endTime, 'HH:MM:ss')}
     </p>
     <p>
       Faction:
@@ -39,4 +40,4 @@ const GeneralData = ({
   </Item>
 );
 
-export default GeneralData;
+export default LogMetaData;

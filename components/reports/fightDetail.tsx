@@ -19,7 +19,7 @@ const FightDetails = ({
     <ListItem>
       Time of Fight:
       {' '}
-      {dateFormat(startTime + endTime, 'HH:MM:ss')}
+      {dateFormat(endTime - startTime, 'MM:ss')}
     </ListItem>
   </>
 );

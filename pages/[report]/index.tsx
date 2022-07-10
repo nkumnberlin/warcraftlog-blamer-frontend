@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import { BossReport, GeneralData } from '../../components/reports';
 import { IBossData, ISingleReport } from '../../interfaces';
+import NavBar from '../../components/navbar';
+import LogMetaData from '../../components/navbar/logMetaData';
+import BossTryList from '../../components/reports/bossTryList';
 
 export interface IRaidId {
   singleReport: ISingleReport,
@@ -11,20 +13,20 @@ export interface IRaidId {
 }
 
 const Main = styled.div`
-  padding: 4rem 0;
-  flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
 const Report = ({ singleReport, bossData }: IRaidId) => (
   <Main>
-    {singleReport && (
-    <GeneralData {...singleReport} />
-    )}
+    <NavBar>
+      {singleReport && (
+      <LogMetaData {...singleReport} />
+      )}
+    </NavBar>
 
     {bossData && (
-    <BossReport bossData={bossData} />
+    <BossTryList bossData={bossData} />
     )}
   </Main>
 );
