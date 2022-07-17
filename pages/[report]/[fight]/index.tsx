@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { Simulate } from 'react-dom/test-utils';
 import {
   Actions,
-  IPlayerDetails, ISingleReport,
 } from '../../../interfaces';
 import NavBar from '../../../components/navbar';
 import LogMetaData from '../../../components/navbar/logMetaData';
@@ -39,8 +37,11 @@ const PlayerDetail = styled.div`
 const Fight = ({ singleReport, player }: IFightResponse) => {
   const router = useRouter();
   const selectPlayer = (id: number) => {
-    router.query.playerID = id.toString();
-    router.push(router);
+    const playerId = id.toString();
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, playerId}
+    }, undefined, {shallow: true});
   };
 
   useEffect(() => {
