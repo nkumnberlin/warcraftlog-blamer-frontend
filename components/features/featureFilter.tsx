@@ -13,7 +13,7 @@ const Container = styled.div`
   }
 `;
 
-const FeatureWrapper = styled.div`
+const FeatureContainer = styled.div`
   display: flex;
   flex-direction: row;
   cursor: pointer;
@@ -37,19 +37,15 @@ const FeatureItem = styled.div`
 `;
 const FeatureFilter = () => (
   <Container>
-    <h2>
-      Filter Options:
-    </h2>
-    { features.map((feature) => (
-      <FeatureWrapper key={feature.name}>
-        <FeatureBullet>
-          *
-        </FeatureBullet>
+    <h2>Filter Options:</h2>
+    {features.map(({ name, description }) => (
+      <FeatureContainer key={name}>
+        <FeatureBullet>*</FeatureBullet>
         <FeatureItem>
-          <b>{feature.name}</b>
-          <p>{feature.description}</p>
+          <b>{name}</b>
+          <p>{description}</p>
         </FeatureItem>
-      </FeatureWrapper>
+      </FeatureContainer>
     ))}
   </Container>
 );

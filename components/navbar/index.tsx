@@ -14,12 +14,12 @@ const StyledNavBar = styled.nav`
   }
 `;
 
-const ImageWrapper = styled.div`
+const ImageContainer = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-const ChildrenWrapper = styled.div`
+const ChildrenContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,12 +33,12 @@ interface INavBar {
 
 const NavBar = ({ children }: INavBar) => (
   <StyledNavBar>
-    <ImageWrapper>
+    <ImageContainer>
       <Image src="/blamer.webp" alt="Blamer Icon" objectFit="cover" quality={100} width="300px" height="250px" />
-    </ImageWrapper>
-    <ChildrenWrapper>
+    </ImageContainer>
+    <ChildrenContainer>
       {children}
-    </ChildrenWrapper>
+    </ChildrenContainer>
   </StyledNavBar>
 );
 

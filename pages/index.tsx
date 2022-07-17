@@ -69,6 +69,7 @@ const Home: NextPage = () => {
 
       <Main>
         <Header>WarcraftLog Blamer</Header>
+        {/* debugging: */}
         <button type="button" onClick={() => router.push('/aAXDYPG7MxbQ6WKV')}>Goto report</button>
         <SearchContainer>
           <Input

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { Simulate } from 'react-dom/test-utils';
 import {
+  Actions,
   IPlayerDetails, ISingleReport,
 } from '../../../interfaces';
 import NavBar from '../../../components/navbar';
@@ -30,7 +31,7 @@ const Content = styled.div`
 
 const PlayerDetail = styled.div`
   display: flex;
-  flex-display: row;
+  flex-direction: row;
   height: 100vh;
 `;
 
@@ -47,13 +48,12 @@ const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
   };
 
   useEffect(() => {
+    if (!router.query.playerID) return;
     const playerContainer = document.getElementById('playerDetails');
-    console.log(playerContainer);
-    if (router.query.playerID !== undefined && playerContainer !== null) {
-      playerContainer.scrollIntoView({
-        behavior: 'smooth',
-      });
-    }
+    if (playerContainer === null) return;
+    playerContainer.scrollIntoView({
+      behavior: 'smooth',
+    });
   }, [router.query.playerID]);
 
   return (
@@ -68,9 +68,9 @@ const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
         <FeatureFilter />
       </Content>
       {router.query?.playerID && (
-      <PlayerDetail id="playerDetails">
-        h2
-      </PlayerDetail>
+        <PlayerDetail id="playerDetails">
+          h2
+        </PlayerDetail>
       )}
     </Main>
   );
@@ -80,9 +80,10 @@ export default Fight;
 
 export const getServerSideProps: GetServerSideProps = async (props) => {
   const { query } = props;
+  const action: Actions = 'FIGHT';
   console.log('process: ', `${process.env.BACKEND_URL}?action=fight&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}`);
   const { data } = await axios.get(
-    `${process.env.BACKEND_URL}?action=fight&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}`,
+    `${process.env.BACKEND_URL}?action=${action}&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}`,
   );
   const { singleReport, playerDetails } = data;
   return {

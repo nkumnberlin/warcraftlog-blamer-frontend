@@ -1,6 +1,6 @@
 import React from 'react';
-import dateFormat from 'dateformat';
 import styled from 'styled-components';
+import dateFormat from 'dateformat';
 import { IOnlyBossFight } from '../../interfaces';
 
 const Item = styled.div`

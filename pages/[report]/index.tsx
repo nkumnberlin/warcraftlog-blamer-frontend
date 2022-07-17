@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import { IBossData, ISingleReport } from '../../interfaces';
+import { IBossData, ISingleReport, Actions } from '../../interfaces';
 import NavBar from '../../components/navbar';
 import LogMetaData from '../../components/navbar/logMetaData';
 import BossTryList from '../../components/reports/bossTryList';
@@ -34,8 +34,9 @@ export default Report;
 
 export const getServerSideProps: GetServerSideProps = async (props) => {
   const { params } = props;
+  const action:Actions = 'BOSS';
   const { data } = await axios.get(
-    `${process.env.BACKEND_URL}?action=boss&code=${params?.report}`,
+    `${process.env.BACKEND_URL}?action=${action}&code=${params?.report}`,
   );
   return {
     props: {
