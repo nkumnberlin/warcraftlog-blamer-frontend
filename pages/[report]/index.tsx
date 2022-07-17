@@ -35,6 +35,7 @@ export default Report;
 export const getServerSideProps: GetServerSideProps = async (props) => {
   const { params } = props;
   const action:Actions = 'BOSS';
+  console.log(`${process.env.BACKEND_URL}?action=${action}&code=${params?.report}\`,`);
   const { data } = await axios.get(
     `${process.env.BACKEND_URL}?action=${action}&code=${params?.report}`,
   );

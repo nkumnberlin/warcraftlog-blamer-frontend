@@ -13,6 +13,7 @@ import LogMetaData from '../../../components/navbar/logMetaData';
 import FightMetaData from '../../../components/navbar/fightMetaData';
 import FeatureFilter from '../../../components/features/featureFilter';
 import PlayerTypeList from '../../../components/player/playerTypeList';
+import { IFightResponse } from '../../../interfaces/FightResponse';
 
 const Main = styled.div`
   flex: 1;
@@ -35,12 +36,7 @@ const PlayerDetail = styled.div`
   height: 100vh;
 `;
 
-interface IDisplayFight {
-  singleReport: ISingleReport
-  playerDetails: IPlayerDetails
-}
-
-const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
+const Fight = ({ singleReport, player }: IFightResponse) => {
   const router = useRouter();
   const selectPlayer = (id: number) => {
     router.query.playerID = id.toString();
@@ -64,7 +60,7 @@ const Fight = ({ singleReport, playerDetails }: IDisplayFight) => {
           && singleReport.fights.map((fight) => <FightMetaData key={fight.id} {...fight} />)}
       </NavBar>
       <Content>
-        <PlayerTypeList playerDetails={playerDetails} selectPlayer={selectPlayer} />
+        <PlayerTypeList role={player.gear} selectPlayer={selectPlayer} />
         <FeatureFilter />
       </Content>
       {router.query?.playerID && (
@@ -85,11 +81,12 @@ export const getServerSideProps: GetServerSideProps = async (props) => {
   const { data } = await axios.get(
     `${process.env.BACKEND_URL}?action=${action}&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}`,
   );
-  const { singleReport, playerDetails } = data;
+  const { singleReport, player, guild } :IFightResponse = data;
   return {
     props: {
       singleReport,
-      playerDetails,
+      player,
+      guild,
     },
   };
 };

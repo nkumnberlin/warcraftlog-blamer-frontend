@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IPlayer, IPlayerDetails } from '../../interfaces';
 import PlayerList from './playerList';
 import { PlayerTypeListAttributes } from '../../constants/PlayerTypeListAttributes';
+import { IRoleDetails } from '../../interfaces/FightResponse';
 
 const PlayerTypeContainer = styled.div`
   display: flex;
@@ -26,14 +26,13 @@ const MetaData = styled.p`
 `;
 
 interface IPlayerTypeList {
-  playerDetails: IPlayerDetails,
+  role: IRoleDetails,
   selectPlayer: (guid: number) => void;
 }
 
-const PlayerTypeList = ({ playerDetails, selectPlayer }: IPlayerTypeList) => (
+const PlayerTypeList = ({ role, selectPlayer }: IPlayerTypeList) => (
   <PlayerTypeContainer>
-    {Object.keys(playerDetails)
-      .reverse()
+    {Object.keys(role)
       .map((key) => (
         <React.Fragment key={key}>
           <h2>{key.toUpperCase()}</h2>
@@ -45,7 +44,7 @@ const PlayerTypeList = ({ playerDetails, selectPlayer }: IPlayerTypeList) => (
               </MetaData>
             ))}
           </MetaDataContainer>
-          {playerDetails[key as keyof IPlayerDetails].map((player: IPlayer) => (
+          {role[key as keyof IRoleDetails].map(({ player }) => (
             <PlayerList key={player.guid} player={player} selectPlayer={selectPlayer} />
           ))}
         </React.Fragment>

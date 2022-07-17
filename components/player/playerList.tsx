@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IPlayer } from '../../interfaces';
+import { IPlayer } from '../../interfaces/FightResponse';
 
 const Player = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const PlayerList = ({ player, selectPlayer }: IPlayerList) => (
     <PlayerInfo>{player.name}</PlayerInfo>
     <PlayerInfo>{player.type}</PlayerInfo>
     <PlayerInfo>{player.maxItemLevel}</PlayerInfo>
-    <PlayerInfo>{player.specs.map((p) => p.spec)}</PlayerInfo>
+    <PlayerInfo>{player.specs.map((spec) => spec)}</PlayerInfo>
   </Player>
 );
 
