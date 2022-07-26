@@ -16,25 +16,27 @@ const LogMetaData = ({
   <Item>
     <p>
       Zone:
-      {' '}
+      <br />
       {zone.name}
     </p>
     <p>
       From:
-      {' '}
+      <br />
       {dateFormat(startTime, 'HH:MM:ss')}
     </p>
     <p>
       Till:
-      {' '}
+      <br />
       {dateFormat(endTime, 'HH:MM:ss')}
     </p>
     <p>
       Faction:
+      <br />
       {guild.faction.name}
     </p>
     <p>
       Guild:
+      <br />
       {guild.name}
     </p>
   </Item>

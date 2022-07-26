@@ -6,11 +6,6 @@ import BossDetail from './bossDetail';
 import Fight from './fight';
 
 const FightContainer = styled.div`
-  padding-left: 5rem;
-`;
-
-const Reports = styled.div`
-  margin-top: 2rem;
 `;
 
 export interface IBossReport {
@@ -22,9 +17,9 @@ const BossTryList = ({
   const router = useRouter();
   const { report } = router.query;
   return (
-    <Reports>
+    <>
       {bossData.map((boss) => (
-        <FightContainer>
+        <FightContainer key={boss.infos.encounterID}>
           <BossDetail bossInfo={boss.infos} kill={!!boss?.kill} />
           {boss.kill && (
           <Fight
@@ -35,6 +30,7 @@ const BossTryList = ({
           )}
           {boss.trys && boss.trys.map((killTry: IOnlyBossFight) => (
             <Fight
+              key={killTry.encounterID}
               fight={killTry}
               report={report}
               router={router}
@@ -42,7 +38,7 @@ const BossTryList = ({
           ))}
         </FightContainer>
       ))}
-    </Reports>
+    </>
   );
 };
 

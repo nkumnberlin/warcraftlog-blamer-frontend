@@ -11,7 +11,7 @@ const Item = styled.div<{ isListItem?: boolean }>`
   align-items: center;
   cursor: pointer;
   margin: 0 auto;
-  padding: 0.5rem 0 0.5rem 0;
+  padding: 0  0 0.5rem 0;
   border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
 
   :hover {
@@ -29,7 +29,7 @@ const Fight = ({ fight, router, report }:IFight) => (
   <Item
     isListItem
     key={fight.id}
-    onClick={() => router.push('/[report]/[fight]', `${report}/${fight.id}?encounterID=${fight.encounterID}`)}
+    onClick={() => router.push('/[report]/[fight]', `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight.startTime}&endTime=${fight.endTime}`)}
   >
     <FightDetails {...fight} />
   </Item>

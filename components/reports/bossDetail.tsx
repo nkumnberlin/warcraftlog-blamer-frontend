@@ -12,14 +12,9 @@ const Item = styled.div<{ isListItem?: boolean }>`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  cursor: pointer;
   margin: 0 auto;
   padding: 0.5rem 0 0.5rem 0;
-  border-bottom: ${(props) => (props.isListItem ? '1px solid rgba(255, 255, 255, 0.2)' : '')};
-
-  :hover {
-    background: #444444;
-  }
+  border-bottom: ${(props) => (props.isListItem ? '1px solid #8bc34a' : '')};
 `;
 const ListItem = styled.p`
   min-width: 10rem;
@@ -35,9 +30,6 @@ const BossDetail = ({ bossInfo, kill }: IBossInfo) => (
   <BossInfoContainer isKilled={kill}>
     <Item isListItem key={bossInfo.id}>
       <ListItem>{bossInfo.name}</ListItem>
-      <ListItem>
-        {kill ? 'Killed' : 'Alive'}
-      </ListItem>
     </Item>
   </BossInfoContainer>
 );

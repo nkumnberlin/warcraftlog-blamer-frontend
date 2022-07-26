@@ -1,48 +1,3 @@
-import { ISingleReport } from './Raid';
-
-interface IStats {
-  Hit: {
-    min: number,
-    max: number
-  },
-  Intellect: {
-    min: number,
-    max: number
-  },
-  Agility: {
-    min: number,
-    max: number
-  },
-  Crit: {
-    min: number,
-    max: number
-  },
-  ItemLevel: {
-    min: number,
-    max: number
-  },
-  Spirit: {
-    min: number,
-    max: number
-  },
-  Strength: {
-    min: number,
-    max: number
-  },
-  Stamina: {
-    min: number,
-    max: number
-  },
-  Expertise: {
-    min: number,
-    max: number
-  },
-  Haste: {
-    min: number,
-    max: number
-  },
-}
-
 export interface IGuild {
   server: {
     name: string,
@@ -53,13 +8,26 @@ export interface IGuild {
   };
 }
 
-export interface IGems {
+export interface IGearMeta {
+  metaEnchant: {
+    error: string;
+  }
+  metaGem: {
+    error: string
+  }
+}
+
+export interface IGemMeta {
+  note: string,
+}
+export interface IGems{
   id: number,
   itemLevel: number,
   icon: string,
+  metaGem?: IGemMeta
 }
 
-export interface IGear {
+export interface IGear extends IGearMeta{
   id: number,
   slot: number,
   quality: number,
@@ -68,13 +36,8 @@ export interface IGear {
   itemLevel: number,
   permanentEnchant: number,
   permanentEnchantName: string,
-  gems: IGems[],
+  gems?: IGems[],
   setID: number,
-}
-
-interface ICombatantInfo {
-  stats: IStats,
-  gear: IGear[]
 }
 
 export interface IPlayer {
@@ -87,70 +50,22 @@ export interface IPlayer {
   specs: [string],
   minItemLevel: number,
   maxItemLevel: number,
+  hasIssues: boolean
 }
 
-export interface IGearMeta {
-  error: string;
-}
-
-export interface ICheckGem {
-  gear: IGear,
-  meta: IGearMeta
-}
-
-export interface IGemMeta {
-  note: string,
-}
-
-export interface ICheckGemQuality {
-  gem: IGems,
-  meta: IGemMeta
-}
-
-export interface ICheckGems {
-  gems: ICheckGem[],
-  quality: ICheckGemQuality[]
-}
-
-export interface IEnchantMeta {
-  error: string;
-}
-
-interface IPlayerDetails {
-  player: IPlayer
-  enchantSummary: {
-    gear: IGear,
-    meta: IEnchantMeta
-  },
-  gemSummary: {
-    gems: {
-      gear: IGear,
-      meta: IGemMeta
-    },
-    quality: {
-      gem: IGems,
-      meta: IGemMeta
-    }
-  }
+export interface IPlayerDetails extends IPlayer {
+  gearSummary: IGear[],
 }
 
 export interface IRoleDetails {
-  healers: IPlayerDetails[],
-  dps: IPlayerDetails[],
-  tanks: IPlayerDetails[]
+  healers: IPlayerDetails[];
+  dps: IPlayerDetails[];
+  tanks: IPlayerDetails[];
 }
 
 // events todo
 export interface IFightResponse {
-  singleReport: ISingleReport,
   guild: IGuild,
-  player: {
-    gear: IRoleDetails,
-    events: {
-      damageDone: object,
-      healingDone: object,
-      deathEvents: object,
-      damageTaken: object
-    }
-  }
+  player: IRoleDetails,
+
 }

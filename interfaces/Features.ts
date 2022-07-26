@@ -1,9 +1,11 @@
-import React from 'react';
+import { FEATURE_IDS } from '../constants/FEATURE_IDS';
 
 interface IFeatures {
-    name: string,
-        description: string,
-        component: React.FC
+    name: string;
+    description: string;
+    Component: any;
+    id:FEATURE_IDS
+
 }
 
 export type { IFeatures };

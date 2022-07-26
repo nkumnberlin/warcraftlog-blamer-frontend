@@ -1,8 +1,9 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styled from 'styled-components';
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 
 const Main = styled.div`
   min-height: 100vh;
@@ -52,7 +53,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (input !== '') {
       const stringArray = input.split('/');
-      if (stringArray[stringArray.length - 2] === 'report') {
+      if (stringArray.includes('report') || stringArray.includes('reports')) {
+        const reportPosition = stringArray.indexOf('reports');
+        console.log(reportPosition);
         const removeParams = stringArray[stringArray.length - 1].split('#')[0];
         router.push({ pathname: `/${removeParams}` });
       }

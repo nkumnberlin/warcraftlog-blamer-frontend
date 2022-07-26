@@ -1,4 +1,4 @@
 export type Actions =
-    'BOSS'
-    | 'FIGHT'
-    | 'FEATURE-ENCHANTS'
+  'BOSS'
+  | 'FIGHT'
+  | 'FEATURE_GEAR_ISSUES'

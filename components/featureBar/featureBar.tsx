@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { features } from './index';
+import { features } from '../../features';
 
 const Container = styled.div`
   display: flex;
@@ -16,17 +16,12 @@ const Container = styled.div`
 const FeatureContainer = styled.div`
   display: flex;
   flex-direction: row;
-  cursor: pointer;
-  padding: 1rem;
-  
-  :hover {
-    background: #444444;
-  }
+  margin-top: 1rem;
 `;
 
 const FeatureBullet = styled.div`
   display: flex;
-  width: 15%;
+  width: 30px;
   justify-content: center;
   align-items: center;
 `;
@@ -34,10 +29,12 @@ const FeatureBullet = styled.div`
 const FeatureItem = styled.div`
   display: flex;
   flex-direction: column;
+  width: 80%;
 `;
-const FeatureFilter = () => (
+
+const FeatureBar = () => (
   <Container>
-    <h2>Filter Options:</h2>
+    <h2 style={{ margin: 0 }}>Filter Options:</h2>
     {features.map(({ name, description }) => (
       <FeatureContainer key={name}>
         <FeatureBullet>*</FeatureBullet>
@@ -50,4 +47,4 @@ const FeatureFilter = () => (
   </Container>
 );
 
-export default FeatureFilter;
+export default FeatureBar;
