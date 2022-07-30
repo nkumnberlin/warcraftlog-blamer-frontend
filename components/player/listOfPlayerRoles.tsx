@@ -10,12 +10,12 @@ const PlayerRoleContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 550px;
-  
 `;
 
 const MetaDataContainer = styled.div`
   display: flex;
-  margin-Bottom: 0.5rem
+  margin-Bottom: 0.5rem;
+  padding-left: 3rem;
 `;
 
 const MetaData = styled.p`
@@ -25,6 +25,7 @@ const MetaData = styled.p`
 
 interface IPlayerTypeList {
   roles: IRoleDetails,
+  parses: {dps: {'': number}, hps:{'': number}}
   selectPlayer: (player: IPlayerDetails) => void;
   selectedPlayer: number;
   setChoice: (choice: IChoice) => void;
@@ -41,7 +42,7 @@ const ButtonContainer = styled.div`
 `;
 
 function ListOfPlayerRoles({
-  roles, selectPlayer, selectedPlayer, setChoice,
+  roles, selectPlayer, selectedPlayer, setChoice, parses,
 }: IPlayerTypeList) {
   return (
     <PlayerRoleContainer>
@@ -64,6 +65,8 @@ function ListOfPlayerRoles({
                   key={player.guid}
                   player={player}
                   selectPlayer={selectPlayer}
+                  parses={parses}
+                  roleType={key}
                 />
                 {selectedPlayer === player.guid && (
                   <ButtonContainer>

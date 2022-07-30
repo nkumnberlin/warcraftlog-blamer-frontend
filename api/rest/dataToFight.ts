@@ -13,6 +13,13 @@ interface IStaticFightData {
   endTime: string| string[]
 }
 
+interface IStaticFightParseData {
+  action: Actions,
+  code: string | string[],
+  encounterID:string| string[],
+  parseType: 'hps' | 'dps'
+}
+
 interface IFetchFightData {
   setFightData: Dispatch<SetStateAction<IFightResponse>>,
   params: IStaticFightData,
@@ -20,6 +27,14 @@ interface IFetchFightData {
 
 export function fetchStaticFightData(params: IStaticFightData) {
   return axiosInstance.get(`${process.env.BACKEND_URL}`, {
+    params: {
+      ...params,
+    },
+  });
+}
+
+export function fetchFightParseData(params: IStaticFightParseData) {
+  return axiosInstance.get('', {
     params: {
       ...params,
     },
@@ -40,11 +55,11 @@ export function dataToFight(params: IStaticFightData) {
 export async function fetchFightData({
   setFightData, params,
 }:IFetchFightData) {
-  if (process.env.NODE_ENV === 'development') {
-    const data = await axios.get('http://localhost:4000/info').then((res) => res.data);
-    setFightData(data);
-    return;
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   const data = await axios.get('http://localhost:4000/info').then((res) => res.data);
+  //   setFightData(data);
+  //   return;
+  // }
   const data = await dataToFight(params);
   if (data) {
     setFightData(data);

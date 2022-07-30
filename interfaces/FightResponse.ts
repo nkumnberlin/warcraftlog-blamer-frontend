@@ -63,9 +63,7 @@ export interface IRoleDetails {
   tanks: IPlayerDetails[];
 }
 
-// events todo
 export interface IFightResponse {
   guild: IGuild,
-  player: IRoleDetails,
-
+  player: IRoleDetails
 }

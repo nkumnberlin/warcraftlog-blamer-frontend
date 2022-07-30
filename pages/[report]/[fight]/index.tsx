@@ -6,7 +6,7 @@ import Script from 'next/script';
 import { Actions } from '../../../interfaces';
 import ListOfPlayerRoles from '../../../components/player/listOfPlayerRoles';
 import { IFightResponse, IPlayerDetails } from '../../../interfaces/FightResponse';
-import { fetchFightData, fetchStaticFightData } from '../../../api/rest';
+import { fetchFightData, fetchStaticFightData, fetchFightParseData } from '../../../api/rest';
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
 
@@ -42,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (props) => {
     startTime: query.startTime || '',
     endTime: query.endTime || '',
   });
+
   const {
     player,
     guild,
@@ -56,9 +57,13 @@ export const getServerSideProps: GetServerSideProps = async (props) => {
 
 const Fight = (fightResponse: IFightResponse) => {
   const [fightData, setFightData] = useState(fightResponse);
+  const [parseData, setParseData] = useState({
+    dps: { '': 0 },
+    hps: { '': 0 },
+  });
   const [player, setSelectedPlayer] = useState<IPlayerDetails | null>(null);
   const [choice, setChoice] = useState<IChoice>(null);
-  const router = useRouter();
+  const { query } = useRouter();
 
   const setPlayer = (chosenPlayer: IPlayerDetails) => {
     if (player === chosenPlayer) {
@@ -72,11 +77,7 @@ const Fight = (fightResponse: IFightResponse) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  useEffect(() => setChoice(null), [player]);
-
-  useEffect(() => {
-    const { query } = router;
-
+  const fetchFightGearData = async () => {
     const action:Actions = 'FEATURE_GEAR_ISSUES';
     const params = {
       action,
@@ -87,6 +88,40 @@ const Fight = (fightResponse: IFightResponse) => {
       endTime: query.endTime || '',
     };
     fetchFightData({ setFightData, params });
+  };
+
+  const fetchParseDPSData = async () => {
+    const { data } = await fetchFightParseData({
+      action: 'LIST_PARSE_TO_FIGHT',
+      code: query?.report || '',
+      encounterID: query.encounterID || '',
+      parseType: 'dps',
+    });
+    setParseData((prevState) => ({
+      ...prevState,
+      dps: data.dps,
+    }));
+  };
+
+  const fetchParseHPSData = async () => {
+    const { data } = await fetchFightParseData({
+      action: 'LIST_PARSE_TO_FIGHT',
+      code: query?.report || '',
+      encounterID: query.encounterID || '',
+      parseType: 'hps',
+    });
+    setParseData((prevState) => ({
+      ...prevState,
+      hps: data.hps,
+    }));
+  };
+
+  useEffect(() => setChoice(null), [player]);
+
+  useEffect(() => {
+    fetchFightGearData();
+    fetchParseHPSData();
+    fetchParseDPSData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -100,6 +135,7 @@ const Fight = (fightResponse: IFightResponse) => {
         <ContentContainer>
           <Content>
             <ListOfPlayerRoles
+              parses={parseData}
               roles={fightData.player}
               selectPlayer={setPlayer}
               selectedPlayer={player?.guid || 0}
