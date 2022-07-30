@@ -39,7 +39,7 @@ const IssueContainer = styled.span`
 interface IPlayerList {
   player: IPlayerDetails
   selectPlayer: (player: IPlayerDetails) => void;
-  parses: {dps: {'key': number}, hps: {'key':number}}
+  parses: {dps: {'': number}, hps: {'':number}}
   roleType: string
 }
 
