@@ -1,118 +1,118 @@
-import React from 'react';
-import { NextPageContext } from 'next/types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import dateFormat from 'dateformat';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { GetBossFightsToLog } from '../../../mocks/getBossFightsToLog';
-
-interface IFight {
-  fight: {
-    difficulty: number;
-    name: string;
-    id: number;
-    kill: string;
-    fightPercentage: number;
-    friendlyPlayers: [number];
-  };
-  report: {
-    endTime: number;
-    startTime: number;
-    guild: { name: string; id: number; faction: { name: string } };
-  }
-}
+import Script from 'next/script';
+import { Actions } from '../../../interfaces';
+import ListOfPlayerRoles from '../../../components/player/listOfPlayerRoles';
+import { IFightResponse, IPlayerDetails } from '../../../interfaces/FightResponse';
+import { fetchFightData, fetchStaticFightData } from '../../../api/rest';
+import GearIssues from '../../../features/gearIssues';
+import { IChoice } from '../../../interfaces/Choice';
 
 const Main = styled.div`
-  padding: 4rem 0;
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 5rem;
+  @media (max-width: 960px) {
+    padding: 2rem;
+  }
 `;
 
-const CharacterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0 4rem 0 4rem;
-`;
-
-const CharacterInfo = styled.div`
-  margin: 0.5rem 0 0.5rem 0;
-  cursor: pointer;
-`;
-
-const EncounterContainer = styled.div`
+const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  margin-bottom: 2rem;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
 `;
 
-interface IUpdateQueryParam {
-  id: string,
-  value: number;
-}
+const Content = styled.div`
+  margin: 0 1rem 1rem 0;
+`;
 
-const Fight = ({ fight, report }: IFight) => {
-  console.log('loggi ', fight);
+export const getServerSideProps: GetServerSideProps = async (props) => {
+  const { query } = props;
+  const action: Actions = 'FIGHT';
+  const { data } = await fetchStaticFightData({
+    action,
+    code: query?.report || '',
+    fight: query?.fight || '',
+    encounterID: query.encounterID || '',
+    startTime: query.startTime || '',
+    endTime: query.endTime || '',
+  });
+  const {
+    player,
+    guild,
+  }: IFightResponse = data;
+  return {
+    props: {
+      player,
+      guild,
+    },
+  };
+};
+
+const Fight = (fightResponse: IFightResponse) => {
+  const [fightData, setFightData] = useState(fightResponse);
+  const [player, setSelectedPlayer] = useState<IPlayerDetails | null>(null);
+  const [choice, setChoice] = useState<IChoice>(null);
   const router = useRouter();
+  const { query } = router;
 
-  function UpdateQueryParam({ id, value }: IUpdateQueryParam) {
-    router.query[id] = value.toString();
-    router.push({
-      query: { ...router.query },
-    });
-  }
+  const setPlayer = (chosenPlayer: IPlayerDetails) => {
+    if (player === chosenPlayer) {
+      return setSelectedPlayer(null);
+    }
+    return setSelectedPlayer(chosenPlayer);
+  };
+
+  useEffect(() => setChoice(null), [player]);
+
+  useEffect(() => {
+    const action:Actions = 'FEATURE_GEAR_ISSUES';
+    const params = {
+      action,
+      code: query?.report || '',
+      fight: query?.fight || '',
+      encounterID: query.encounterID || '',
+      startTime: query.startTime || '',
+      endTime: query.endTime || '',
+    };
+    fetchFightData({ setFightData, params });
+  }, []);
+
   return (
-    <Main>
-      <EncounterContainer>
-        <p>
-          Boss:
-          {fight.name}
-        </p>
-        <p>
-          From:
-          {' '}
-          {dateFormat(report.startTime, 'mmmm dS, yyyy, h:MM TT')}
-        </p>
-        <p>
-          Till:
-          {dateFormat(report.endTime, 'mmmm dS, yyyy, h:MM TT')}
-        </p>
-        <p>
-          Faction:
-          {report.guild.faction.name}
-        </p>
-        <p>
-          Guild:
-          {report.guild.name}
-        </p>
-      </EncounterContainer>
-      <CharacterContainer>
-        {fight.friendlyPlayers.map((player) => (
-          <CharacterInfo key={player} onClick={() => UpdateQueryParam({ id: 'player', value: player })}>
-            Name:
-            {' '}
-            {player}
-          </CharacterInfo>
-        ))}
-      </CharacterContainer>
-    </Main>
+    <>
+      <Script id="header">{'const whTooltips = {colorLinks: true, iconizeLinks: true, renameLinks: true}'}</Script>
+      <Script id="headerscript" src="https://wow.zamimg.com/widgets/power.js" strategy="lazyOnload" />
+      <Main>
+        {fightData?.player
+        && (
+        <ContentContainer>
+          <Content>
+            <ListOfPlayerRoles
+              roles={fightData.player}
+              selectPlayer={setPlayer}
+              selectedPlayer={player?.guid || 0}
+              setChoice={setChoice}
+            />
+          </Content>
+            {player && choice && (
+              <Content>
+                <GearIssues
+                  player={player}
+                  choice={choice}
+                />
+              </Content>
+            )}
+        </ContentContainer>
+        )}
+      </Main>
+    </>
+
   );
 };
 
 export default Fight;
-Fight.getInitialProps = async ({ query }: NextPageContext) => {
-  const { fight, report } = query;
-  try {
-    console.log(report);
-    // const res = await swr.get(`${process.env.BACKEND_URL}`);
-    // const data = res.data;
-    return {
-      report: GetBossFightsToLog.data.reportData.report,
-      fight: GetBossFightsToLog.data.reportData.report
-        .fights
-        .find((curFight) => curFight.id.toString() === fight),
-    };
-  } catch (error) {
-    return { error };
-  }
-};

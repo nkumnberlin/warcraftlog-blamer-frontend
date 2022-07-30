@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styled from 'styled-components';
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const Main = styled.div`
@@ -44,20 +44,20 @@ const Input = styled.input`
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [input, setInput] = useState('');
-  const handleInput = (ev: ChangeEvent<HTMLInputElement>) => {
-    setInput(ev.currentTarget.value);
+  const [wLogUrl, setWLogUrl] = useState('');
+  const handleWlogUrl = (ev: ChangeEvent<HTMLInputElement>) => {
+    setWLogUrl(ev.currentTarget.value);
   };
 
   useEffect(() => {
-    if (input !== '') {
-      const stringArray = input.split('/');
-      if (stringArray[stringArray.length - 2] === 'report') {
+    if (wLogUrl !== '') {
+      const stringArray = wLogUrl.split('/');
+      if (stringArray.includes('report') || stringArray.includes('reports')) {
         const removeParams = stringArray[stringArray.length - 1].split('#')[0];
         router.push({ pathname: `/${removeParams}` });
       }
     }
-  }, [input]);
+  }, [wLogUrl]);
 
   return (
     <Container>
@@ -69,13 +69,15 @@ const Home: NextPage = () => {
 
       <Main>
         <Header>WarcraftLog Blamer</Header>
-        <button type="button" onClick={() => router.push('/aGBwFt9j2g18KXq6')}>Goto report</button>
+        {/* debugging: */}
+        {/* aAXDYPG7MxbQ6WKV */}
+        <button type="button" onClick={() => router.push('/NV98X24RykgfDT7x')}>Goto report</button>
         <SearchContainer>
           <Input
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
             type="text"
-            value={input}
-            onChange={handleInput}
+            value={wLogUrl}
+            onChange={handleWlogUrl}
           />
         </SearchContainer>
       </Main>
