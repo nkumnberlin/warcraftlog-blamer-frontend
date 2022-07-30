@@ -67,6 +67,11 @@ const Fight = (fightResponse: IFightResponse) => {
     return setSelectedPlayer(chosenPlayer);
   };
 
+  const setUserChoice = (userChoice: IChoice) => {
+    setChoice(userChoice);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => setChoice(null), [player]);
 
   useEffect(() => {
@@ -98,7 +103,7 @@ const Fight = (fightResponse: IFightResponse) => {
               roles={fightData.player}
               selectPlayer={setPlayer}
               selectedPlayer={player?.guid || 0}
-              setChoice={setChoice}
+              setChoice={setUserChoice}
             />
           </Content>
             {player && choice && (

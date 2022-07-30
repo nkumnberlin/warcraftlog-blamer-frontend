@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PlayerInfo from './playerInfo';
 import { PLAYER_ROLE_ATTRIBUTES } from '../../constants/PLAYER_ROLE_ATTRIBUTES';
@@ -27,10 +27,13 @@ interface IPlayerTypeList {
   roles: IRoleDetails,
   selectPlayer: (player: IPlayerDetails) => void;
   selectedPlayer: number;
-  setChoice: Dispatch<SetStateAction<IChoice>>;
+  setChoice: (choice: IChoice) => void;
 }
 
-const Accordion = styled.div`
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
   min-height: 2.5rem;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -63,16 +66,10 @@ function ListOfPlayerRoles({
                   selectPlayer={selectPlayer}
                 />
                 {selectedPlayer === player.guid && (
-                  <Accordion>
+                  <ButtonContainer>
                     {player.hasIssues && <Button text="See Gear with Issues" action={() => setChoice('issues')} />}
                     <Button text="See complete Gear" action={() => setChoice('all')} />
-                    {/* <button type="button" onClick={() => setChoice('issues')}> */}
-                    {/*   See Gear with issues */}
-                    {/* </button> */}
-                    {/* <button type="button" onClick={() => setChoice('all')}> */}
-                    {/*   See all Gear */}
-                    {/* </button> */}
-                  </Accordion>
+                  </ButtonContainer>
                 )}
               </React.Fragment>
             ))}
