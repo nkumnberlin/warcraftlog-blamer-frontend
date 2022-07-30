@@ -3,6 +3,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Button from '../components/button';
 
 const Main = styled.div`
   min-height: 100vh;
@@ -72,7 +73,7 @@ const Home: NextPage = () => {
         <Header>WarcraftLog Blamer</Header>
         {/* debugging: */}
         {/* aAXDYPG7MxbQ6WKV */}
-        <button type="button" onClick={() => router.push('/NV98X24RykgfDT7x')}>Goto report</button>
+        <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
         <SearchContainer>
           <Input
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
