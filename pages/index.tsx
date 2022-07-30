@@ -57,6 +57,7 @@ const Home: NextPage = () => {
         router.push({ pathname: `/${removeParams}` });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wLogUrl]);
 
   return (

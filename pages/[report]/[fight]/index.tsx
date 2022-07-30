@@ -59,7 +59,6 @@ const Fight = (fightResponse: IFightResponse) => {
   const [player, setSelectedPlayer] = useState<IPlayerDetails | null>(null);
   const [choice, setChoice] = useState<IChoice>(null);
   const router = useRouter();
-  const { query } = router;
 
   const setPlayer = (chosenPlayer: IPlayerDetails) => {
     if (player === chosenPlayer) {
@@ -71,6 +70,8 @@ const Fight = (fightResponse: IFightResponse) => {
   useEffect(() => setChoice(null), [player]);
 
   useEffect(() => {
+    const { query } = router;
+
     const action:Actions = 'FEATURE_GEAR_ISSUES';
     const params = {
       action,
@@ -81,6 +82,7 @@ const Fight = (fightResponse: IFightResponse) => {
       endTime: query.endTime || '',
     };
     fetchFightData({ setFightData, params });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
