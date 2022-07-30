@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { Actions } from '../../../interfaces';
 import ListOfPlayerRoles from '../../../components/player/listOfPlayerRoles';
 import { IFightResponse, IPlayerDetails } from '../../../interfaces/FightResponse';
-import { fetchFightData } from './fetchDataToFight';
-import { FEATURE_IDS } from '../../../constants/FEATURE_IDS';
+import { fetchFightData, fetchStaticFightData } from '../../../api/rest';
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
 
@@ -36,10 +34,14 @@ const Content = styled.div`
 export const getServerSideProps: GetServerSideProps = async (props) => {
   const { query } = props;
   const action: Actions = 'FIGHT';
-  console.log('process: ', `${process.env.BACKEND_URL}?action=${action}&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}&startTime=${query?.startTime}&endTime=${query?.endTime}`);
-  const { data } = await axios.get(
-    `${process.env.BACKEND_URL}?action=${action}&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}&startTime=${query?.startTime}&endTime=${query?.endTime}`,
-  );
+  const { data } = await fetchStaticFightData({
+    action,
+    code: query?.report || '',
+    fight: query?.fight || '',
+    encounterID: query.encounterID || '',
+    startTime: query.startTime || '',
+    endTime: query.endTime || '',
+  });
   const {
     player,
     guild,
@@ -58,23 +60,27 @@ const Fight = (fightResponse: IFightResponse) => {
   const [choice, setChoice] = useState<IChoice>(null);
   const router = useRouter();
   const { query } = router;
-  const action:Actions = 'FEATURE_GEAR_ISSUES';
-  const dataQuery = `?action=${action}&code=${query?.report}&fight=${query?.fight}&encounterID=${query?.encounterID}&startTime=${query?.startTime}&endTime=${query?.endTime}`;
 
-  console.log(choice);
-  useEffect(() => {
-    if (!player) return;
-    const feature = 'gearIssues' as FEATURE_IDS;
-    const playerContainer = document.getElementById(feature);
+  const setPlayer = (chosenPlayer: IPlayerDetails) => {
+    if (player === chosenPlayer) {
+      return setSelectedPlayer(null);
+    }
+    return setSelectedPlayer(chosenPlayer);
+  };
 
-    if (playerContainer === null) return;
-    playerContainer.scrollIntoView({
-      behavior: 'smooth',
-    });
-  }, [player]);
+  useEffect(() => setChoice(null), [player]);
 
   useEffect(() => {
-    fetchFightData({ setFightData });
+    const action:Actions = 'FEATURE_GEAR_ISSUES';
+    const params = {
+      action,
+      code: query?.report || '',
+      fight: query?.fight || '',
+      encounterID: query.encounterID || '',
+      startTime: query.startTime || '',
+      endTime: query.endTime || '',
+    };
+    fetchFightData({ setFightData, params });
   }, []);
 
   return (
@@ -88,7 +94,7 @@ const Fight = (fightResponse: IFightResponse) => {
           <Content>
             <ListOfPlayerRoles
               roles={fightData.player}
-              selectPlayer={setSelectedPlayer}
+              selectPlayer={setPlayer}
               selectedPlayer={player?.guid || 0}
               setChoice={setChoice}
             />

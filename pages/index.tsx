@@ -3,7 +3,6 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 
 const Main = styled.div`
   min-height: 100vh;
@@ -45,22 +44,20 @@ const Input = styled.input`
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [input, setInput] = useState('');
-  const handleInput = (ev: ChangeEvent<HTMLInputElement>) => {
-    setInput(ev.currentTarget.value);
+  const [wLogUrl, setWLogUrl] = useState('');
+  const handleWlogUrl = (ev: ChangeEvent<HTMLInputElement>) => {
+    setWLogUrl(ev.currentTarget.value);
   };
 
   useEffect(() => {
-    if (input !== '') {
-      const stringArray = input.split('/');
+    if (wLogUrl !== '') {
+      const stringArray = wLogUrl.split('/');
       if (stringArray.includes('report') || stringArray.includes('reports')) {
-        const reportPosition = stringArray.indexOf('reports');
-        console.log(reportPosition);
         const removeParams = stringArray[stringArray.length - 1].split('#')[0];
         router.push({ pathname: `/${removeParams}` });
       }
     }
-  }, [input]);
+  }, [wLogUrl]);
 
   return (
     <Container>
@@ -79,8 +76,8 @@ const Home: NextPage = () => {
           <Input
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
             type="text"
-            value={input}
-            onChange={handleInput}
+            value={wLogUrl}
+            onChange={handleWlogUrl}
           />
         </SearchContainer>
       </Main>

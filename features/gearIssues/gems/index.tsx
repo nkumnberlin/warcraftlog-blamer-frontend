@@ -17,6 +17,10 @@ const GemIssues = styled.div`
   padding-right: 0.5rem;
 `;
 
+const GemError = styled.span`
+  padding-left: 0.5rem;
+`;
+
 // only show Gems of interest if a note is linked to a gem
 function GemsList({ gear, id }: IGemsList) {
   return (
@@ -24,9 +28,11 @@ function GemsList({ gear, id }: IGemsList) {
       {gear.gems && gear.gems[id]?.metaGem?.note && (
         <GemIssues>
           <GemToolTip gem={gear.gems[id]} />
-          This Gem has the following issue:
+          <GemError>
+            Gem issue:
             {' '}
             {gear.gems[id]?.metaGem?.note}
+          </GemError>
         </GemIssues>
       )}
     </GemsListContainer>

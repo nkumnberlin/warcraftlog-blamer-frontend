@@ -4,6 +4,7 @@ import PlayerInfo from './playerInfo';
 import { PLAYER_ROLE_ATTRIBUTES } from '../../constants/PLAYER_ROLE_ATTRIBUTES';
 import { IPlayerDetails, IRoleDetails } from '../../interfaces/FightResponse';
 import { IChoice } from '../../interfaces/Choice';
+import Button from '../button/button';
 
 const PlayerRoleContainer = styled.div`
   display: flex;
@@ -56,21 +57,21 @@ function ListOfPlayerRoles({
             </MetaDataContainer>
             {roles[key as keyof IRoleDetails].map((player) => (
               <React.Fragment key={player.guid}>
-                <div onClick={() => setChoice(null)}>
-                  <PlayerInfo
-                    key={player.guid}
-                    player={player}
-                    selectPlayer={selectPlayer}
-                  />
-                </div>
+                <PlayerInfo
+                  key={player.guid}
+                  player={player}
+                  selectPlayer={selectPlayer}
+                />
                 {selectedPlayer === player.guid && (
                   <Accordion>
-                    <button type="button" onClick={() => setChoice('issues')}>
-                      See Gear with issues
-                    </button>
-                    <button type="button" onClick={() => setChoice('all')}>
-                      See all Gear
-                    </button>
+                    {player.hasIssues && <Button text="See Gear with Issues" action={() => setChoice('issues')} />}
+                    <Button text="See complete Gear" action={() => setChoice('all')} />
+                    {/* <button type="button" onClick={() => setChoice('issues')}> */}
+                    {/*   See Gear with issues */}
+                    {/* </button> */}
+                    {/* <button type="button" onClick={() => setChoice('all')}> */}
+                    {/*   See all Gear */}
+                    {/* </button> */}
                   </Accordion>
                 )}
               </React.Fragment>
