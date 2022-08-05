@@ -43,9 +43,7 @@ export function fetchFightParseData(params: IStaticFightParseData) {
 
 export function dataToFight(params: IStaticFightData) {
   return axiosInstance.get('', {
-    params: {
-      ...params,
-    },
+    params,
   }).then((res) => res.data).catch((e) => {
     console.warn('Error: ', e);
     dataToFight(params);

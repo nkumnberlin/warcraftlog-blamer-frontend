@@ -54,7 +54,11 @@ const Home: NextPage = () => {
     if (wLogUrl !== '') {
       const stringArray = wLogUrl.split('/');
       if (stringArray.includes('report') || stringArray.includes('reports')) {
-        const removeParams = stringArray[stringArray.length - 1].split('#')[0];
+        let position = stringArray.indexOf('reports');
+        if (position === -1) {
+          position = stringArray.indexOf('report');
+        }
+        const removeParams = stringArray[position + 1];
         router.push({ pathname: `/${removeParams}` });
       }
     }

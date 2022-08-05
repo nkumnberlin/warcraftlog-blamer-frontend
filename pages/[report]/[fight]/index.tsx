@@ -9,6 +9,7 @@ import { IFightResponse, IPlayerDetails } from '../../../interfaces/FightRespons
 import { fetchFightData, fetchStaticFightData, fetchFightParseData } from '../../../api/rest';
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
+import { PARSE_TYPES } from '../../../constants/PARSETYPES';
 
 const Main = styled.div`
   flex: 1;
@@ -90,29 +91,16 @@ const Fight = (fightResponse: IFightResponse) => {
     fetchFightData({ setFightData, params });
   };
 
-  const fetchParseDPSData = async () => {
+  const fetchParse = async (parseType:PARSE_TYPES) => {
     const { data } = await fetchFightParseData({
       action: 'LIST_PARSE_TO_FIGHT',
       code: query?.report || '',
       encounterID: query.encounterID || '',
-      parseType: 'dps',
+      parseType,
     });
     setParseData((prevState) => ({
       ...prevState,
-      dps: data.dps,
-    }));
-  };
-
-  const fetchParseHPSData = async () => {
-    const { data } = await fetchFightParseData({
-      action: 'LIST_PARSE_TO_FIGHT',
-      code: query?.report || '',
-      encounterID: query.encounterID || '',
-      parseType: 'hps',
-    });
-    setParseData((prevState) => ({
-      ...prevState,
-      hps: data.hps,
+      ...data,
     }));
   };
 
@@ -120,8 +108,8 @@ const Fight = (fightResponse: IFightResponse) => {
 
   useEffect(() => {
     fetchFightGearData();
-    fetchParseHPSData();
-    fetchParseDPSData();
+    fetchParse('hps');
+    fetchParse('dps');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

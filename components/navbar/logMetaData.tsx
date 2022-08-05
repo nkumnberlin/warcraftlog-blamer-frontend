@@ -29,16 +29,21 @@ const LogMetaData = ({
       <br />
       {dateFormat(endTime, 'HH:MM:ss')}
     </p>
-    <p>
-      Faction:
-      <br />
-      {guild.faction.name}
-    </p>
-    <p>
-      Guild:
-      <br />
-      {guild.name}
-    </p>
+    {guild?.faction?.name && (
+      <>
+        <p>
+          Faction:
+          <br />
+          {guild.faction.name}
+        </p>
+        <p>
+          Guild:
+          <br />
+          {guild.name}
+        </p>
+      </>
+    )}
+
   </Item>
 );
 
