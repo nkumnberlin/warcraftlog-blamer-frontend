@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IGear } from '../../../interfaces/FightResponse';
-import GearLinkToolTip from '../../tooltip/gearToolTip';
+import GearLinkToolTip from '../../../components/tooltip/gearToolTip';
 
 interface IGearList{
   gear: IGear

@@ -76,7 +76,7 @@ const Home: NextPage = () => {
       <Main>
         <Header>WarcraftLog Blamer</Header>
         {/* debugging: */}
-        {/* aAXDYPG7MxbQ6WKV */}
+        {/* NV98X24RykgfDT7x */}
         <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
         <SearchContainer>
           <Input

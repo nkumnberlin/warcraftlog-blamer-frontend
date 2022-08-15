@@ -4,7 +4,7 @@ import PlayerInfo from './playerInfo';
 import { PLAYER_ROLE_ATTRIBUTES } from '../../constants/PLAYER_ROLE_ATTRIBUTES';
 import { IPlayerDetails, IRoleDetails } from '../../interfaces/FightResponse';
 import { IChoice } from '../../interfaces/Choice';
-import Button from '../button/button';
+import Button from '../../components/button/button';
 
 const PlayerRoleContainer = styled.div`
   display: flex;
@@ -72,6 +72,7 @@ function ListOfPlayerRoles({
                   <ButtonContainer>
                     {player.hasIssues && <Button text="See Gear with Issues" action={() => setChoice('issues')} />}
                     <Button text="See complete Gear" action={() => setChoice('all')} />
+                    <Button text="See used Abilities and Events" action={() => setChoice('abilities')} />
                   </ButtonContainer>
                 )}
               </React.Fragment>

@@ -4,8 +4,8 @@ import { GetServerSideProps } from 'next';
 import { IBossData, ISingleReport, Actions } from '../../interfaces';
 import NavBar from '../../components/navbar';
 import LogMetaData from '../../components/navbar/logMetaData';
-import BossTryList from '../../components/reports/bossTryList';
-import FeatureBar from '../../components/featureBar/featureBar';
+import BossTryList from '../../features/reports/bossTryList';
+import FeatureBar from '../../components/featureBar';
 import { fetchStaticBossData } from '../../api/rest';
 
 export interface IRaidId {

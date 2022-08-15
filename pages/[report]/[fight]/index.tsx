@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { Actions } from '../../../interfaces';
-import ListOfPlayerRoles from '../../../components/player/listOfPlayerRoles';
-import { IFightResponse, IPlayerDetails } from '../../../interfaces/FightResponse';
+import ListOfPlayerRoles from '../../../features/player/listOfPlayerRoles';
+import { IFightResponse, IPlayerDetails, IRoleDetails } from '../../../interfaces/FightResponse';
 import { fetchFightData, fetchStaticFightData, fetchFightParseData } from '../../../api/rest';
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
 import { PARSE_TYPES } from '../../../constants/PARSETYPES';
+import AbilitiesUsage from '../../../features/abilitiesUsage';
 
 const Main = styled.div`
   flex: 1;
@@ -75,10 +76,9 @@ const Fight = (fightResponse: IFightResponse) => {
 
   const setUserChoice = (userChoice: IChoice) => {
     setChoice(userChoice);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const fetchFightGearData = async () => {
+  async function fetchFightGearData() {
     const action:Actions = 'FEATURE_GEAR_ISSUES';
     const params = {
       action,
@@ -89,23 +89,35 @@ const Fight = (fightResponse: IFightResponse) => {
       endTime: query.endTime || '',
     };
     fetchFightData({ setFightData, params });
-  };
+  }
 
-  const fetchParse = async (parseType:PARSE_TYPES) => {
-    const { data } = await fetchFightParseData({
+  const allPlayer = useCallback(() => ({
+    ...fightData.player.dps,
+    ...fightData.player.healers,
+    ...fightData.player.tanks,
+  }), [fightData.player]);
+
+  async function fetchParse(parseType:PARSE_TYPES) {
+    fetchFightParseData({
       action: 'LIST_PARSE_TO_FIGHT',
       code: query?.report || '',
       encounterID: query.encounterID || '',
       parseType,
-    });
-    setParseData((prevState) => ({
+    }).then(({ data }) => setParseData((prevState) => ({
       ...prevState,
       ...data,
-    }));
-  };
+    })));
+  }
 
+  useEffect(() => {
+    if (choice !== null && window.innerWidth > 1400) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [choice]);
   useEffect(() => setChoice(null), [player]);
-
   useEffect(() => {
     fetchFightGearData();
     fetchParse('hps');
@@ -132,10 +144,20 @@ const Fight = (fightResponse: IFightResponse) => {
           </Content>
             {player && choice && (
               <Content>
-                <GearIssues
-                  player={player}
-                  choice={choice}
-                />
+                {choice === 'issues'
+                 && (
+                 <GearIssues
+                   player={player}
+                   choice={choice}
+                 />
+                 )}
+                {choice === 'abilities'
+                  && (
+                  <AbilitiesUsage
+                    player={player}
+                    allPlayer={allPlayer()}
+                  />
+                  )}
               </Content>
             )}
         </ContentContainer>
