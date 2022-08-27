@@ -25,14 +25,22 @@ interface IFight {
   router: NextRouter
 }
 
-const Fight = ({ fight, router, report }:IFight) => (
-  <Item
-    isListItem
-    key={fight.id}
-    onClick={() => router.push('/[report]/[fight]', `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight.startTime}&endTime=${fight.endTime}`)}
-  >
-    <FightDetails {...fight} />
-  </Item>
-);
+function Fight({ fight, router, report }:IFight) {
+  async function selectFight() {
+    await router.push('/[report]/[fight]',
+      `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight
+        .startTime}&endTime=${fight.endTime}`);
+  }
+
+  return (
+    <Item
+      isListItem
+      key={fight.id}
+      onClick={() => selectFight()}
+    >
+      <FightDetails {...fight} />
+    </Item>
+  );
+}
 
 export default Fight;

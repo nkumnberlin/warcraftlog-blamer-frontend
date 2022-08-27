@@ -1,3 +1,5 @@
-import Button from './button';
+import StandardButton from './StandardButton';
+import DrawerButton from './DrawerButton';
 
-export default Button;
+export default StandardButton;
+export { DrawerButton };

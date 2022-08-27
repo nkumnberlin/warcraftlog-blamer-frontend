@@ -23,7 +23,9 @@ export interface Ability {
   timestamp: number;
   type: string;
   sourceID: number;
+  amount: number;
   targetID: number;
+  resourceChange: number;
   abilityGameID: number;
   fight: number;
   resourceActor: number;
@@ -35,14 +37,19 @@ export interface Ability {
   armor: number;
   x: number;
   y: number;
+  killerID: string;
   facing: number;
   mapID: number;
   itemLevel: number;
   sameSource: boolean;
 }
 
-export interface TypesOfAbilities {
-  abilityNumber: Ability[];
+export interface TargetOfAbility {
+  targetId: Ability[]
+}
+
+export interface AbilityNumber {
+  abilityNumber: TargetOfAbility;
 }
 
 export interface Auras {
@@ -50,10 +57,10 @@ export interface Auras {
 }
 
 export interface AbilitiesOfPlayer {
-  cast: TypesOfAbilities;
-  damage: TypesOfAbilities;
-  resourcechange: TypesOfAbilities;
-  heal: TypesOfAbilities;
+  cast: AbilityNumber;
+  damage: AbilityNumber;
+  resourcechange: AbilityNumber;
+  heal: AbilityNumber;
 }
 
 export interface AurasAndAbilitiesOfPlayer extends AbilitiesOfPlayer, Auras {

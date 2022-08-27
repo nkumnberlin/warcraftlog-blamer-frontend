@@ -1,22 +1,52 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import useSWR, { SWRResponse } from 'swr';
-import { IPlayer, IPlayerDetails } from '../../interfaces/FightResponse';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+} from '@chakra-ui/react';
+import { IEnemies, IPlayer, IPlayerDetails } from '../../interfaces/FightResponse';
 import { getAbilitiesToPlayer } from '../../api/rest';
 import { Actions } from '../../interfaces';
 import { AbilityToolTip, AuraToolTip } from '../../components/tooltip';
 import {
-  AbilitiesOfPlayer,
+  AbilitiesOfPlayer, Ability,
+  AbilityNumber,
   AbilityResponse,
-  TypesOfAbilities,
+  TargetOfAbility,
 } from '../../interfaces/AbilityResponse';
+
+interface IAllPlayers {id: IPlayer}
+interface ISetEnemyToID {
+  target: string,
+  allPlayers:IAllPlayers;
+  enemies:IEnemies[]
+}
+function setEnemyToId({
+  target, allPlayers, enemies,
+}: ISetEnemyToID) {
+  const targetID = parseInt(target, 10);
+  const player: IPlayer = allPlayers[targetID as unknown as keyof IAllPlayers];
+  if (player) {
+    return `Target: ${player.name}`;
+  }
+  const possibleEnemy = enemies.find((enemy) => enemy.id === targetID);
+  if (possibleEnemy) {
+    return possibleEnemy.name;
+  }
+  return 'Self';
+}
 
 interface IAbilitiesUsage {
   player: IPlayerDetails;
-  allPlayer: IPlayer[]
+  allPlayers: IAllPlayers;
+  enemies: IEnemies[]
 }
 
-function AbilitiesUsage({ player, allPlayer }: IAbilitiesUsage) {
+function AbilitiesUsage({ player, allPlayers, enemies }: IAbilitiesUsage) {
   const { query } = useRouter();
   const action: Actions = 'FEATURE_ABILITY_ISSUES';
   const params = {
@@ -37,69 +67,92 @@ function AbilitiesUsage({ player, allPlayer }: IAbilitiesUsage) {
   if (!abilities?.abilitiesOfPlayer) return <>waitin</>;
   const { auras, ...rest } = abilities?.abilitiesOfPlayer;
 
-  console.log('alle', allPlayer);
+  // display data cumulated and as a timeline
+  // recieved
   return (
-    <>
-      {auras.map((aura) => (
-        <AuraToolTip
-          aura={aura}
-        />
-      ))}
-      {Object.keys(rest).map((type) => (
-        <>
-          <p>
-            {type}
-          </p>
-          {Object.keys(rest[type as keyof AbilitiesOfPlayer]).map((abilityKey) => (
-            <div style={{ marginTop: '0.5rem' }}>
-              <div>
-                <AbilityToolTip
-                  ability={
-                  rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof TypesOfAbilities][0]
-                }
-                  abilitiesWithIcon={abilities?.abilitiesWithIcon}
+    <div>
+      <Accordion allowToggle style={{ marginTop: '1rem' }}>
+        <AccordionItem>
+          <AccordionButton>
+            <p>
+              Auras
+            </p>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            {auras && auras.map((aura) => (
+              <div key={aura.ability} style={{ marginRight: '0.25rem' }}>
+                <AuraToolTip
+                  aura={aura}
                 />
               </div>
-              {rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof TypesOfAbilities]
-                .map((ability) => (
-                  <>
-                    <AbilityToolTip
-                      ability={ability}
-                      abilitiesWithIcon={abilities?.abilitiesWithIcon}
-                    />
-                    <p>
-                      target:
-                      {ability.targetID}
-                      source:
-                      {ability.sourceID}
-                      Curr Hp:
-                      {ability.hitPoints}
-                      Max Hp:
-                      {ability.maxHitPoints}
-                      Max Hp:
-                      {ability.maxHitPoints}
-                      TimeStamp:
-                      {ability.timestamp}
-                      {ability?.classResources?.length > 0
-                      && (
-                      <>
-                        Class Ress Type:
-                        {ability.classResources[0].type}
-                        Class Ress Amount:
-                        {ability.classResources[0].amount}
-                        Class Ress Max:
-                        {ability.classResources[0].max}
-                      </>
-                      )}
-                    </p>
-                  </>
-                ))}
+            ))}
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      {Object.keys(rest).map((type) => (
+        <Accordion allowToggle key={type} style={{ marginTop: '1rem' }}>
+          <AccordionItem>
+            <AccordionButton>
+              <p>
+                {type}
+              </p>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              {Object.keys(rest[type as keyof AbilitiesOfPlayer]).sort().map((abilityKey) => (
+                <Accordion allowToggle key={abilityKey + type}>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <AbilityToolTip
+                        abilityNumber={abilityKey}
+                        abilitiesWithIcon={abilities?.abilitiesWithIcon}
+                      />
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel>
+                      {/* nur ressourcen, aura, taken, cast, death, ress */}
+                      {/* filter out of casts double entries only show in ressorucechange */}
+                      {Object.keys(rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber]).map((target) => (
+                        <>
+                          { setEnemyToId({
+                            target,
+                            enemies,
+                            allPlayers,
+                          }) }
+                          {' Damage: '}
+                          {/* cummulated dmg is needed likewise heal */}
+                          {rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber][target as keyof TargetOfAbility].reduce((prev: number, curr: Ability) => prev + curr.amount, 0)}
+                          <br />
+                          Casts:
+                          {' '}
+                          {rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber][target as keyof TargetOfAbility].length}
+                          <br />
+                          {(type === 'resourcechange') && rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber][target as keyof TargetOfAbility].reduce((prev: number, curr: Ability) => prev + curr.resourceChange, 0)}
+                          <br />
+                          {(type === 'death') && (
+                          <>
+                            {rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber][target as keyof TargetOfAbility].map((event) => setEnemyToId({
+                              target: event.killerID,
+                              enemies,
+                              allPlayers,
+                            }))}
+                          </>
+                          )}
+                          <br />
+                          {(type === 'death') && rest[type as keyof AbilitiesOfPlayer][abilityKey as keyof AbilityNumber][target as keyof TargetOfAbility].reduce((prev: number, curr: Ability) => prev + curr.resourceChange, 0)}
 
-            </div>
-          ))}
-        </>
+                        </>
+                      ))}
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              ))}
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
       ))}
-    </>
+    </div>
   );
 }
 

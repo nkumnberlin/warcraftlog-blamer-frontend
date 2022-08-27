@@ -4,24 +4,18 @@ import Image from 'next/image';
 import { IPlayerDetails } from '../../interfaces/FightResponse';
 import CLASS_COLORS from '../../constants/CLASS_COLORS';
 import { assignParseToParseColor } from '../../constants/PARSE_COLORS';
+import { Info } from './PlayerColorName';
 
 const Player = styled.div`
   display: flex;
   justify-content: flex-start;
-  padding: 0.5rem;
+  padding: 0.25rem;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   :hover {
     background: #444444;
   }
-`;
-
-const Info = styled.p<{type?: string, smallElement?: boolean}>`
-  padding: 0 0.5rem 0 0;
-  min-width: ${(props) => (props.smallElement ? '2.5rem' : '10rem')};
-  max-width: 15rem;
-  color: ${(props) => props.type};
 `;
 
 const Parse = styled.p<{parse?: string}>`
@@ -50,7 +44,14 @@ function PlayerInfo({
   // @ts-ignore
   const parse = Math.trunc(parseRaw[player.name]) || '';
   return (
-    <Player key={player.guid} onClick={() => selectPlayer(player)}>
+    <Player
+      key={player.guid}
+      onClick={() => {
+        // eslint-disable-next-line no-param-reassign
+        player.role = roleType;
+        selectPlayer(player);
+      }}
+    >
       <Parse parse={assignParseToParseColor(parse)}>
         {parse}
       </Parse>

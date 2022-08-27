@@ -4,37 +4,58 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { Actions } from '../../../interfaces';
-import ListOfPlayerRoles from '../../../features/player/listOfPlayerRoles';
-import { IFightResponse, IPlayerDetails, IRoleDetails } from '../../../interfaces/FightResponse';
-import { fetchFightData, fetchStaticFightData, fetchFightParseData } from '../../../api/rest';
+import { IFightResponse, IPlayer, IPlayerDetails } from '../../../interfaces/FightResponse';
+import {
+  fetchEnemiesToFight,
+  fetchFightData,
+  fetchFightParseData,
+  fetchStaticFightData,
+} from '../../../api/rest';
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
 import { PARSE_TYPES } from '../../../constants/PARSETYPES';
 import AbilitiesUsage from '../../../features/abilitiesUsage';
+import PlayerDrawer from '../../../components/drawer';
+import NavBar from '../../../components/navbar';
+import BossToPlayerOverview from '../../../components/navbar/BossToPlayerOverview';
+import EventDataToPlayer from '../../../features/player/eventData';
+import useCumulateEvents from '../../../hooks/useCumulateEvents';
+import { IEventDataPlayer } from '../../../interfaces/EventDataPlayer';
 
 const Main = styled.div`
   flex: 1;
-  padding: 5rem;
+  padding:0 0 5rem;
   @media (max-width: 960px) {
     padding: 2rem;
   }
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{hasPlayerSelected:boolean}>`
   display: flex;
   flex-direction: row;
-
+  min-height: 80vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1rem;
+  border:  1px solid rgba(255, 255, 255, 0.2);
+  align-items: ${(props) => (props.hasPlayerSelected ? '' : 'center')};
   @media (max-width: 1200px) {
     flex-direction: column;
   }
 `;
 
 const Content = styled.div`
-  margin: 0 1rem 1rem 0;
+  width: 100%;
 `;
 
 export const getServerSideProps: GetServerSideProps = async (props) => {
   const { query } = props;
+
+  const enemiesAction: Actions = 'ENEMIES';
+  const { data: enemies } = await fetchEnemiesToFight({
+    action: enemiesAction,
+    code: query?.report || '',
+  });
   const action: Actions = 'FIGHT';
   const { data } = await fetchStaticFightData({
     action,
@@ -44,20 +65,27 @@ export const getServerSideProps: GetServerSideProps = async (props) => {
     startTime: query.startTime || '',
     endTime: query.endTime || '',
   });
-
-  const {
-    player,
-    guild,
-  }: IFightResponse = data;
   return {
     props: {
-      player,
-      guild,
+      ...data,
+      enemies,
     },
   };
 };
 
 const Fight = (fightResponse: IFightResponse) => {
+  const {
+    enemies,
+    damageDone,
+    healingDone,
+    deathEvents,
+    guild,
+  } = fightResponse;
+  const eventData = {
+    damageDone,
+    healingDone,
+    deathEvents,
+  };
   const [fightData, setFightData] = useState(fightResponse);
   const [parseData, setParseData] = useState({
     dps: { '': 0 },
@@ -74,12 +102,8 @@ const Fight = (fightResponse: IFightResponse) => {
     return setSelectedPlayer(chosenPlayer);
   };
 
-  const setUserChoice = (userChoice: IChoice) => {
-    setChoice(userChoice);
-  };
-
   async function fetchFightGearData() {
-    const action:Actions = 'FEATURE_GEAR_ISSUES';
+    const action: Actions = 'FEATURE_GEAR_ISSUES';
     const params = {
       action,
       code: query?.report || '',
@@ -88,25 +112,35 @@ const Fight = (fightResponse: IFightResponse) => {
       startTime: query.startTime || '',
       endTime: query.endTime || '',
     };
-    fetchFightData({ setFightData, params });
+    fetchFightData({
+      setFightData,
+      params,
+    });
   }
 
-  const allPlayer = useCallback(() => ({
-    ...fightData.player.dps,
-    ...fightData.player.healers,
-    ...fightData.player.tanks,
-  }), [fightData.player]);
+  const allPlayer = useCallback(() => {
+    const players = [
+      ...fightData.player.dps,
+      ...fightData.player.healers,
+      ...fightData.player.tanks,
+    ];
+    return players.reduce((prev, curr) => ({
+      ...prev,
+      [curr.id]: curr,
+    }), {} as { id: IPlayer });
+  }, [fightData.player]);
 
-  async function fetchParse(parseType:PARSE_TYPES) {
+  async function fetchParse(parseType: PARSE_TYPES) {
     fetchFightParseData({
       action: 'LIST_PARSE_TO_FIGHT',
       code: query?.report || '',
       encounterID: query.encounterID || '',
       parseType,
-    }).then(({ data }) => setParseData((prevState) => ({
-      ...prevState,
-      ...data,
-    })));
+    })
+      .then(({ data }) => setParseData((prevState) => ({
+        ...prevState,
+        ...data,
+      })));
   }
 
   useEffect(() => {
@@ -125,43 +159,63 @@ const Fight = (fightResponse: IFightResponse) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // const cumulatedDmg = useCumulateEvents(damageDone)();
+  // const cumulatedHeal = useCumulateEvents(healingDone)();
+
+  // const events: IEventDataPlayer = {
+  //   cumulatedDmg,
+  //   cumulatedHeal,
+  //   ...eventData,
+  // };
   return (
     <>
-      <Script id="header">{'const whTooltips = {colorLinks: true, iconizeLinks: true, renameLinks: true}'}</Script>
-      <Script id="headerscript" src="https://wow.zamimg.com/widgets/power.js" strategy="lazyOnload" />
+      <Script
+        id="header"
+      >
+        {'const whTooltips = {colorLinks: true, iconizeLinks: true, renameLinks: true}'}
+      </Script>
+      <Script
+        id="headerscript"
+        src="https://wow.zamimg.com/widgets/power.js"
+        strategy="lazyOnload"
+      />
       <Main>
-        {fightData?.player
-        && (
-        <ContentContainer>
-          <Content>
-            <ListOfPlayerRoles
-              parses={parseData}
-              roles={fightData.player}
-              selectPlayer={setPlayer}
-              selectedPlayer={player?.guid || 0}
-              setChoice={setUserChoice}
+        <NavBar>
+          {fightResponse && (
+            <BossToPlayerOverview
+              guild={guild}
+              startTime={parseInt(query?.startTime?.toString() || '0', 10)}
+              endTime={parseInt(query?.endTime?.toString() || '0', 10)}
+              player={player}
             />
-          </Content>
-            {player && choice && (
-              <Content>
-                {choice === 'issues'
-                 && (
-                 <GearIssues
-                   player={player}
-                   choice={choice}
-                 />
-                 )}
-                {choice === 'abilities'
-                  && (
+          )}
+        </NavBar>
+
+        {fightData?.player
+          && (
+            <ContentContainer hasPlayerSelected={!!player?.guid}>
+              <PlayerDrawer
+                parses={parseData}
+                roles={fightData.player}
+                selectPlayer={setPlayer}
+                selectedPlayer={player?.guid || 0}
+                eventData={eventData}
+              />
+
+                {player && (
+                <Content>
+                  <GearIssues
+                    player={player}
+                  />
                   <AbilitiesUsage
                     player={player}
-                    allPlayer={allPlayer()}
+                    allPlayers={allPlayer()}
+                    enemies={enemies}
                   />
-                  )}
-              </Content>
-            )}
-        </ContentContainer>
-        )}
+                </Content>
+                )}
+            </ContentContainer>
+          )}
       </Main>
     </>
 

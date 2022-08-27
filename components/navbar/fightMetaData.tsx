@@ -11,26 +11,32 @@ const Item = styled.div`
   margin: 1.5rem 0 0 0;
 `;
 
-const FightMetaData = ({
-  name, kill, fightPercentage, startTime, endTime,
-}: IOnlyBossFight) => (
-  <Item>
-    <p>
-      Boss:
-      {' '}
-      {name}
-    </p>
-    <p>
-      Time of Fight:
-      {' '}
-      {dateFormat(endTime - startTime, 'MM:ss')}
-    </p>
-    <p>
-      Status:
-      {' '}
-      {kill ? 'Kill' : `HP left: ${fightPercentage}%`}
-    </p>
-  </Item>
-);
+function FightMetaData({
+  name,
+  kill,
+  fightPercentage,
+  startTime,
+  endTime,
+}: IOnlyBossFight) {
+  return (
+    <Item>
+      <p>
+        Boss:
+        {' '}
+        {name}
+      </p>
+      <p>
+        Time of Fight:
+        {' '}
+        {dateFormat(endTime - startTime, 'MM:ss')}
+      </p>
+      <p>
+        Status:
+        {' '}
+        {kill ? 'Kill' : `HP left: ${fightPercentage}%`}
+      </p>
+    </Item>
+  );
+}
 
 export default FightMetaData;

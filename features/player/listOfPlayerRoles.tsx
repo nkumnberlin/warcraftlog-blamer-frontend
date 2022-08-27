@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import PlayerInfo from './playerInfo';
 import { PLAYER_ROLE_ATTRIBUTES } from '../../constants/PLAYER_ROLE_ATTRIBUTES';
 import { IPlayerDetails, IRoleDetails } from '../../interfaces/FightResponse';
-import { IChoice } from '../../interfaces/Choice';
-import Button from '../../components/button/button';
+import useCumulateEvents from '../../hooks/useCumulateEvents';
+import { IEventDataPlayer, IRoleEventData } from '../../interfaces/EventDataPlayer';
+import EventDataToPlayer from './eventData';
 
 const PlayerRoleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 550px;
+  width: 100%;
 `;
 
 const MetaDataContainer = styled.div`
@@ -20,7 +21,7 @@ const MetaDataContainer = styled.div`
 
 const MetaData = styled.p`
   font-weight: bold;
-  min-width: 10rem;
+  min-width: 9rem;
 `;
 
 interface IPlayerTypeList {
@@ -28,21 +29,11 @@ interface IPlayerTypeList {
   parses: {dps: {'': number}, hps:{'': number}}
   selectPlayer: (player: IPlayerDetails) => void;
   selectedPlayer: number;
-  setChoice: (choice: IChoice) => void;
+  eventData: IRoleEventData
 }
 
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  min-height: 2.5rem;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-`;
-
 function ListOfPlayerRoles({
-  roles, selectPlayer, selectedPlayer, setChoice, parses,
+  roles, selectPlayer, selectedPlayer, parses, eventData,
 }: IPlayerTypeList) {
   return (
     <PlayerRoleContainer>
@@ -50,7 +41,7 @@ function ListOfPlayerRoles({
         .sort()
         .map((key) => (
           <React.Fragment key={key}>
-            <h2>{key.toUpperCase()}</h2>
+            <h2 style={{ marginTop: '0.5rem' }}>{key.toUpperCase()}</h2>
             <MetaDataContainer>
               {PLAYER_ROLE_ATTRIBUTES.map((attribute) => (
                 <MetaData key={attribute}>
@@ -60,22 +51,13 @@ function ListOfPlayerRoles({
               ))}
             </MetaDataContainer>
             {roles[key as keyof IRoleDetails].map((player) => (
-              <React.Fragment key={player.guid}>
-                <PlayerInfo
-                  key={player.guid}
-                  player={player}
-                  selectPlayer={selectPlayer}
-                  parses={parses}
-                  roleType={key}
-                />
-                {selectedPlayer === player.guid && (
-                  <ButtonContainer>
-                    {player.hasIssues && <Button text="See Gear with Issues" action={() => setChoice('issues')} />}
-                    <Button text="See complete Gear" action={() => setChoice('all')} />
-                    <Button text="See used Abilities and Events" action={() => setChoice('abilities')} />
-                  </ButtonContainer>
-                )}
-              </React.Fragment>
+              <PlayerInfo
+                key={player.guid}
+                player={player}
+                selectPlayer={selectPlayer}
+                parses={parses}
+                roleType={key}
+              />
             ))}
           </React.Fragment>
         ))}

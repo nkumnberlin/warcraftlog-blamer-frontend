@@ -1,24 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IGear, IPlayerDetails } from '../../interfaces/FightResponse';
 import GearList from './components/gear';
 import GemsList from './components/gems';
-import { IChoice } from '../../interfaces/Choice';
+import StandardButton from '../../components/button';
 
-interface IGearIssuesComponent {
-  player: IPlayerDetails;
-  choice: IChoice
-}
 const GearIssueContainer = styled.div`
-  margin: 1rem 0 0 0;
 `;
 
 const GearIssueItem = styled.div`
   height: 100%;
 `;
 
-function displayChoice(gears:IGear[], choice: IChoice) {
-  if (choice === 'all') return gears;
+function displayChoice(gears: IGear[]) {
   return gears.filter((gear) => {
     if (gear?.gems) {
       const hasGemNotes = Object.keys(gear.gems)
@@ -34,25 +28,39 @@ function displayChoice(gears:IGear[], choice: IChoice) {
   });
 }
 
-function GearIssues({ player, choice }: IGearIssuesComponent) {
-  const displayGear = displayChoice(player.gearSummary, choice);
+interface IRenderGear {
+  gear: IGear
+}
+
+function RenderGear({ gear }:IRenderGear) {
+  const { id, gems } = gear;
+  return (
+    <GearIssueItem key={id}>
+      <GearList gear={gear}>
+        {gems && Object.keys(gems)
+          .map((gemId) => (
+            <GemsList gear={gear} key={id} id={parseInt(gemId, 10)} />
+          ))}
+      </GearList>
+    </GearIssueItem>
+  );
+}
+
+interface IGearIssuesComponent {
+  player: IPlayerDetails;
+}
+
+function GearIssues({
+  player,
+}: IGearIssuesComponent) {
+  const gearWithIssue = displayChoice(player.gearSummary);
+  const [showMore, setShowMore] = useState(false);
   return (
     <GearIssueContainer>
-      <h2 style={{ margin: 0, paddingBottom: '3.2rem' }}>
-        Summary of
-        {' '}
-        {player.name}
-      </h2>
-      {displayGear.map((gear) => (
-        <GearIssueItem key={gear.id}>
-          <GearList gear={gear}>
-            {gear?.gems && Object.keys(gear.gems)
-              .map((id) => (
-                <GemsList gear={gear} key={id} id={parseInt(id, 10)} />
-              ))}
-          </GearList>
-        </GearIssueItem>
-      ))}
+      {showMore
+        ? player.gearSummary.map((gear) => <RenderGear gear={gear} />)
+        : gearWithIssue.map((gear) => <RenderGear gear={gear} />)}
+      <StandardButton action={() => setShowMore(!showMore)} text={showMore ? 'Hide all Gear?' : 'Show all Gear?'} />
     </GearIssueContainer>
   );
 }
