@@ -32,12 +32,14 @@ const IssueContainer = styled.span`
 interface IPlayerList {
   player: IPlayerDetails
   selectPlayer: (player: IPlayerDetails) => void;
+  setSecondPlayer: (player: IPlayerDetails) => void;
+  comparePlayers: boolean;
   parses: {dps: {'': number}, hps: {'':number}}
   roleType: string
 }
 
 function PlayerInfo({
-  player, selectPlayer, parses, roleType,
+  player, selectPlayer, parses, roleType, setSecondPlayer, comparePlayers,
 }: IPlayerList) {
   const parseRaw = parses[roleType === 'healers' ? 'hps' : 'dps'];
   // @ts-ignore
@@ -48,7 +50,11 @@ function PlayerInfo({
       onClick={() => {
         // eslint-disable-next-line no-param-reassign
         player.role = roleType;
-        selectPlayer(player);
+        if (comparePlayers) {
+          setSecondPlayer(player);
+        } else {
+          selectPlayer(player);
+        }
       }}
     >
       <Parse parse={assignParseToParseColor(parse)}>

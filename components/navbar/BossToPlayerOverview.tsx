@@ -21,6 +21,8 @@ interface IBossToPlayerOverview {
   endTime: number;
   guild: IGuild;
   player: IPlayerDetails | null;
+  comparePlayers: boolean;
+  secondPlayer: IPlayerDetails | null;
 }
 
 function BossToPlayerOverview({
@@ -28,6 +30,8 @@ function BossToPlayerOverview({
   endTime,
   guild,
   player,
+  secondPlayer,
+  comparePlayers,
 }: IBossToPlayerOverview) {
   return (
     <Container>
@@ -57,6 +61,27 @@ function BossToPlayerOverview({
           <p> Spec: </p>
           <InfoWithClassColor type={player.type}>
             {player.specs[0]}
+          </InfoWithClassColor>
+        </Item>
+      </>
+      )}
+      { comparePlayers && secondPlayer && (
+      <>
+        <Item>
+          <p>
+            compared with:
+          </p>
+        </Item>
+        <Item>
+          <p> Player: </p>
+          <InfoWithClassColor type={secondPlayer.type}>
+            {secondPlayer.name}
+          </InfoWithClassColor>
+        </Item>
+        <Item>
+          <p> Spec: </p>
+          <InfoWithClassColor type={secondPlayer.type}>
+            {secondPlayer.specs[0]}
           </InfoWithClassColor>
         </Item>
       </>

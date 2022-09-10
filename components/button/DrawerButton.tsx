@@ -43,7 +43,7 @@ const DrawerButton = ({
   hasPlayerSelected,
 }: IButton) => (
   <Container onClick={() => action()}>
-    <StyledHamburger hasplayerselected={hasPlayerSelected} />
+    <StyledHamburger hasplayerselected={hasPlayerSelected ? true : undefined} />
     {!hasPlayerSelected ? <StyledButton type="button"><Text>{text}</Text></StyledButton> : null}
   </Container>
 

@@ -15,7 +15,7 @@ function GemLinkToolTip({ gem }: IGemLink) {
   }
 
   return (
-    <a href={`https://en.tbc.wowhead.com/item=${gem.id}`} className={`q${gemItemLevel(gem)}`}>
+    <a href={`https://wotlk.wowhead.com/item=${gem.id}`} className={`q${gemItemLevel(gem)}`}>
       <Image
         src={`https://assets.rpglogs.com/img/warcraft/abilities/${gem.icon}`}
         alt={gem.icon}

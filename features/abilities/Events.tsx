@@ -8,7 +8,7 @@ import {
 } from '../../interfaces/AbilityResponse';
 import { AbilityToolTip } from '../../components/tooltip';
 import DetailsTableContainer from '../../components/table/DetailsTableContainer';
-import { IEnemies } from '../../interfaces/FightResponse';
+import { IEnemies, IPlayerDetails } from '../../interfaces/FightResponse';
 import { IAllPlayers } from '../../interfaces';
 import EventsBody from '../../components/table/bodys/EventsBody';
 
@@ -16,7 +16,8 @@ interface IAbilites {
   abilities: IBuffs[];
   abilitiesWithIcon: AbilitiesWithIcon[],
   enemies: IEnemies[],
-  allPlayers: IAllPlayers
+  allPlayers: IAllPlayers,
+  player: IPlayerDetails
 }
 
 const StyledAccordionItems = styled(AccordionItem)`
@@ -29,14 +30,17 @@ function Events({
   abilitiesWithIcon,
   enemies,
   allPlayers,
+  player,
 }: IAbilites) {
-  // const targetOfAbility = assignEnemyToId(target, enemies, allPlayers);
   let onlyEvents = {} as IBuffs;
   Object.keys(abilities).forEach((abilityKey) => {
     const parsedKey = parseInt(abilityKey, 10);
     const abilityType = (abilities[parsedKey] as unknown as IAbility[])[0].type;
-    if (abilityType !== 'resourcechange' && abilityType !== 'cast') {
-      onlyEvents = { ...onlyEvents, [parsedKey]: abilities[parsedKey] };
+    if (abilityType !== 'resourcechange') {
+      if ((abilities[parsedKey][0] as unknown as IAbility).sourceID === player.id
+        || (abilities[parsedKey][0] as unknown as IAbility).sourceID === -1) {
+        onlyEvents = { ...onlyEvents, [parsedKey]: abilities[parsedKey] };
+      }
     }
   });
   const deathPlaceholderImage = '18308';
@@ -55,13 +59,14 @@ function Events({
               </AccordionButton>
               <AccordionPanel>
                 <DetailsTableContainer
-                  header={['Event Type']}
+                  header={['Casts', 'HP', 'Timestamp', 'Boss HP']}
                 >
                   <EventsBody
                     onlyEvents={onlyEvents}
                     abilityKey={abilityKey}
                     enemies={enemies}
                     allPlayers={allPlayers}
+                    player={player}
                   />
                 </DetailsTableContainer>
               </AccordionPanel>

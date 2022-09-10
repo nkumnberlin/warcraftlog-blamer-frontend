@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { IPlayerEventData } from '../interfaces/FightResponse';
+import { IPlayerEventData } from '../interfaces/EventDataPlayer';
 
 function useCumulateEvents(event: IPlayerEventData[]) {
   return useCallback(() => event

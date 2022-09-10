@@ -28,12 +28,12 @@ interface IPlayerTypeList {
   roles: IRoleDetails,
   parses: {dps: {'': number}, hps:{'': number}}
   selectPlayer: (player: IPlayerDetails) => void;
-  selectedPlayer: number;
-  eventData: IRoleEventData
+  setSecondPlayer: (player: IPlayerDetails) => void;
+  comparePlayers: boolean
 }
 
 function PlayerList({
-  roles, selectPlayer, selectedPlayer, parses, eventData,
+  roles, selectPlayer, parses, setSecondPlayer, comparePlayers,
 }: IPlayerTypeList) {
   return (
     <PlayerRoleContainer>
@@ -55,6 +55,8 @@ function PlayerList({
                 key={player.guid}
                 player={player}
                 selectPlayer={selectPlayer}
+                setSecondPlayer={setSecondPlayer}
+                comparePlayers={comparePlayers}
                 parses={parses}
                 roleType={key}
               />

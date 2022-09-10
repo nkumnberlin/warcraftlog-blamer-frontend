@@ -39,7 +39,7 @@ function RenderGear({ gear }:IRenderGear) {
       <GearList gear={gear}>
         {gems && Object.keys(gems)
           .map((gemId) => (
-            <GemsList gear={gear} key={id} id={parseInt(gemId, 10)} />
+            <GemsList gear={gear} key={id + gemId} id={parseInt(gemId, 10)} />
           ))}
       </GearList>
     </GearIssueItem>
@@ -58,8 +58,8 @@ function GearIssues({
   return (
     <GearIssueContainer>
       {showMore
-        ? player.gearSummary.map((gear) => <RenderGear gear={gear} />)
-        : gearWithIssue.map((gear) => <RenderGear gear={gear} />)}
+        ? player.gearSummary.map((gear) => <RenderGear key={gear.id} gear={gear} />)
+        : gearWithIssue.map((gear) => <RenderGear key={gear.id} gear={gear} />)}
       <StandardButton action={() => setShowMore(!showMore)} text={showMore ? 'Hide all Gear?' : 'Show all Gear?'} />
     </GearIssueContainer>
   );

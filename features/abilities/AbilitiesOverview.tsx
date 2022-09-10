@@ -80,7 +80,7 @@ function AbilitiesOverview({
         <AccordionItem>
           <AccordionButton>
             <p>
-              Auras
+              Auras (can be empty)
             </p>
             <AccordionIcon />
           </AccordionButton>
@@ -145,6 +145,7 @@ function AbilitiesOverview({
               abilitiesWithIcon={abilitiesWithIcon}
               enemies={enemies}
               allPlayers={allPlayers}
+              player={player}
             />
           </AccordionPanel>
         </AccordionItem>

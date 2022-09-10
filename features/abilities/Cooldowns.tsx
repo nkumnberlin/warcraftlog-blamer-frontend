@@ -43,7 +43,7 @@ function Cooldowns({
               </AccordionButton>
               <AccordionPanel>
                 <DetailsTableContainer
-                  header={['#', 'HP', 'Mana / Energy / Rage', 'Timestamp', 'Boss HP']}
+                  header={['#', 'HP', 'Mana / Energy / Rage / Runes', 'Timestamp', 'Boss HP']}
                 >
                   <CooldownBody
                     cooldown={buffs}

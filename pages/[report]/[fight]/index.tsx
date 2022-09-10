@@ -31,7 +31,7 @@ const ContentContainer = styled.div<{hasplayerselected?:boolean}>`
   display: flex;
   flex-direction: row;
   min-height: 80vh;
-  max-width: 1440px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 1rem;
   border:  1px solid rgba(255, 255, 255, 0.2);
@@ -90,14 +90,22 @@ const Fight = (fightResponse: IFightResponse) => {
   });
   const [comparePlayers, setComparePlayers] = useState<boolean>(false);
   const [player, setSelectedPlayer] = useState<IPlayerDetails | null>(null);
+  const [secondPlayer, setSelectSecondPlayer] = useState<IPlayerDetails | null>(null);
   const [choice, setChoice] = useState<IChoice>(null);
   const { query } = useRouter();
 
   const setPlayer = (chosenPlayer: IPlayerDetails) => {
-    if (player === chosenPlayer) {
+    if (player === chosenPlayer || secondPlayer === chosenPlayer) {
       return setSelectedPlayer(null);
     }
     return setSelectedPlayer(chosenPlayer);
+  };
+
+  const setSecondPlayer = (chosenPlayer: IPlayerDetails) => {
+    if (player === chosenPlayer || secondPlayer === chosenPlayer) {
+      return setSelectSecondPlayer(null);
+    }
+    return setSelectSecondPlayer(chosenPlayer);
   };
 
   async function fetchFightGearData() {
@@ -177,6 +185,8 @@ const Fight = (fightResponse: IFightResponse) => {
               startTime={parseInt(query?.startTime?.toString() || '0', 10)}
               endTime={parseInt(query?.endTime?.toString() || '0', 10)}
               player={player}
+              comparePlayers={comparePlayers}
+              secondPlayer={secondPlayer}
             />
           )}
         </NavBar>
@@ -190,8 +200,9 @@ const Fight = (fightResponse: IFightResponse) => {
                 selectedPlayer={player?.guid || 0}
                 eventData={eventData}
                 setComparePlayers={setComparePlayers}
+                comparePlayers={comparePlayers}
+                setSecondPlayer={setSecondPlayer}
               />
-
                 {player && (
                 <Content>
                   <GearIssues
@@ -204,6 +215,18 @@ const Fight = (fightResponse: IFightResponse) => {
                   />
                 </Content>
                 )}
+              {comparePlayers && secondPlayer && (
+                <Content style={{ marginLeft: '1rem' }}>
+                  <GearIssues
+                    player={secondPlayer}
+                  />
+                  <AbilitiesOverview
+                    player={secondPlayer}
+                    allPlayers={allPlayer()}
+                    enemies={enemies}
+                  />
+                </Content>
+              )}
             </ContentContainer>
           )}
       </Main>

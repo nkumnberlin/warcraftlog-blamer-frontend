@@ -21,7 +21,7 @@ function AbilityToolTip({ abilitiesWithIcon, abilityNumber }: IAbilityToolTip) {
   // https://assets.rpglogs.com/img/warcraft/abilities/spell_fire_selfdestruct.jpg
   return (
     <>
-      <a href={`https://en.tbc.wowhead.com/spell=${abilityGameID}`}>
+      <a href={`https://wotlk.wowhead.com/spell=${abilityGameID}`}>
         <Image
           src={`https://assets.rpglogs.com/img/warcraft/abilities/${abilityGameID === 18308
             ? 'spell_fire_selfdestruct.jpg' : abilityWithIcon?.icon}`}
