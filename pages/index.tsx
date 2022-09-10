@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styled from 'styled-components';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Spinner } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import Button from '../components/button';
 
 const Main = styled.div`
@@ -47,25 +47,36 @@ const Input = styled.input`
 const Home: NextPage = () => {
   const router = useRouter();
   const [wLogUrl, setWLogUrl] = useState('');
+  const toast = useToast();
+
   const handleWlogUrl = (ev: ChangeEvent<HTMLInputElement>) => {
     setWLogUrl(ev.currentTarget.value);
   };
-  if (wLogUrl !== '') {
-    const stringArray = wLogUrl.split('/');
-    if (stringArray.includes('report') || stringArray.includes('reports')) {
-      let position = stringArray.indexOf('reports');
-      if (position === -1) {
-        position = stringArray.indexOf('report');
+  useEffect(() => {
+    if (wLogUrl !== '') {
+      const stringArray = wLogUrl.split('/');
+      if (stringArray.includes('report') || stringArray.includes('reports')) {
+        let position = stringArray.indexOf('reports');
+        if (position === -1) {
+          position = stringArray.indexOf('report');
+        }
+        const removeParams = stringArray[position + 1];
+        if (removeParams.includes('#')) {
+          const newKey = removeParams.split('#')[0];
+          router.push({ pathname: `/${newKey}` });
+        } else {
+          router.push({ pathname: `/${removeParams}` });
+        }
       }
-      const removeParams = stringArray[position + 1];
-      if (removeParams.includes('#')) {
-        const newKey = removeParams.split('#')[0];
-        router.push({ pathname: `/${newKey}` });
-      } else {
-        router.push({ pathname: `/${removeParams}` });
-      }
+      toast({
+        title: 'List of Bossfights will be created.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
     }
-  }
+  },
+  [router, toast, wLogUrl]);
 
   return (
     <Container>
@@ -80,7 +91,6 @@ const Home: NextPage = () => {
         {/* debugging: */}
         {/* NV98X24RykgfDT7x */}
         <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
-        {wLogUrl && <Spinner style={{ marginTop: '1rem' }} />}
         <SearchContainer>
           <Input
             style={{ color: 'black' }}
