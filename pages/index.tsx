@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from '../components/button';
 
@@ -49,21 +49,22 @@ const Home: NextPage = () => {
   const handleWlogUrl = (ev: ChangeEvent<HTMLInputElement>) => {
     setWLogUrl(ev.currentTarget.value);
   };
-  // CFMH2k3Qh7pj16Pm
-  useEffect(() => {
-    if (wLogUrl !== '') {
-      const stringArray = wLogUrl.split('/');
-      if (stringArray.includes('report') || stringArray.includes('reports')) {
-        let position = stringArray.indexOf('reports');
-        if (position === -1) {
-          position = stringArray.indexOf('report');
-        }
-        const removeParams = stringArray[position + 1];
+  if (wLogUrl !== '') {
+    const stringArray = wLogUrl.split('/');
+    if (stringArray.includes('report') || stringArray.includes('reports')) {
+      let position = stringArray.indexOf('reports');
+      if (position === -1) {
+        position = stringArray.indexOf('report');
+      }
+      const removeParams = stringArray[position + 1];
+      if (removeParams.includes('#')) {
+        const newKey = removeParams.split('#')[0];
+        router.push({ pathname: `/${newKey}` });
+      } else {
         router.push({ pathname: `/${removeParams}` });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wLogUrl]);
+  }
 
   return (
     <Container>
@@ -80,6 +81,7 @@ const Home: NextPage = () => {
         <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
         <SearchContainer>
           <Input
+            style={{ color: 'black' }}
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
             type="text"
             value={wLogUrl}

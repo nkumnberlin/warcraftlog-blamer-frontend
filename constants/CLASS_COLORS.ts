@@ -8,6 +8,7 @@ const CLASS_COLORS = {
   hunter: '#abd473',
   priest: '#fff',
   warlock: '#9482c9',
+  deathknight: '#c41f3b',
 };
 
 export default CLASS_COLORS;
