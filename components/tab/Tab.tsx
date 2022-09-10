@@ -3,12 +3,7 @@ import {
   Tab, TabList, TabPanel, TabPanels, Tabs,
 } from '@chakra-ui/react';
 
-interface IFeatureTab {
-  features: string[];
-  featureContent: any;
-}
-
-function FeatureTab({ featureContent, features }: IFeatureTab) {
+function FeatureTab() {
   return (
     <Tabs>
       <TabList>

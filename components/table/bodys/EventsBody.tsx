@@ -1,7 +1,7 @@
 import React from 'react';
 import { Td, Tr } from '@chakra-ui/react';
 import { IBuffs } from '../../../interfaces/AbilityResponse';
-import { IEnemies, IPlayerDetails } from '../../../interfaces/FightResponse';
+import { IEnemies } from '../../../interfaces/FightResponse';
 import { IAllPlayers } from '../../../interfaces';
 import { findTargetName } from '../../../utils/enemies';
 
@@ -10,10 +10,9 @@ interface IEventsBody {
   abilityKey: string,
   enemies: IEnemies[],
   allPlayers: IAllPlayers,
-  player: IPlayerDetails
 }
 function EventsBody({
-  onlyEvents, abilityKey, enemies, allPlayers, player,
+  onlyEvents, abilityKey, enemies, allPlayers,
 }:IEventsBody) {
   const abilityKeyInt = parseInt(abilityKey, 10);
   return (

@@ -66,7 +66,6 @@ function Events({
                     abilityKey={abilityKey}
                     enemies={enemies}
                     allPlayers={allPlayers}
-                    player={player}
                   />
                 </DetailsTableContainer>
               </AccordionPanel>

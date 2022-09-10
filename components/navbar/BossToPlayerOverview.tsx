@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import dateFormat from 'dateformat';
 import React from 'react';
 import { IGuild, IPlayerDetails } from '../../interfaces/FightResponse';
-import PlayerInfo from '../../features/player/PlayerInfo';
 import { InfoWithClassColor } from '../../features/player/InfoWithClassColor';
 
 const Container = styled.div`
