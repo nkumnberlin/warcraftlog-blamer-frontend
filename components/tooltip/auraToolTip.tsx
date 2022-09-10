@@ -13,7 +13,7 @@ interface IAuraToolTip {
 
 function AuraToolTip({ aura }:IAuraToolTip) {
   return (
-    <a href={`https://en.tbc.wowhead.com/spell=${aura.ability}`} key={aura.ability + aura.icon + aura.source}>
+    <a href={`https://tbc.wowhead.com/spell=${aura.ability}`} key={aura.ability + aura.icon + aura.source}>
       <Image
         src={`https://assets.rpglogs.com/img/warcraft/abilities/${aura?.icon}`}
         alt={aura?.name}

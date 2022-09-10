@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import { IBossData, ISingleReport, Actions } from '../../interfaces';
 import NavBar from '../../components/navbar';
-import LogMetaData from '../../components/navbar/logMetaData';
+import LogMetaData from '../../components/navbar/LogMetaData';
 import BossTryList from '../../features/reports/bossTryList';
 import FeatureBar from '../../components/featureBar';
 import { fetchStaticBossData } from '../../api/rest';

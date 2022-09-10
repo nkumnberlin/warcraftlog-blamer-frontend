@@ -14,13 +14,10 @@ import {
 import GearIssues from '../../../features/gearIssues';
 import { IChoice } from '../../../interfaces/Choice';
 import { PARSE_TYPES } from '../../../constants/PARSETYPES';
-import AbilitiesUsage from '../../../features/abilitiesUsage';
+import AbilitiesOverview from '../../../features/abilities';
 import PlayerDrawer from '../../../components/drawer';
 import NavBar from '../../../components/navbar';
 import BossToPlayerOverview from '../../../components/navbar/BossToPlayerOverview';
-import EventDataToPlayer from '../../../features/player/eventData';
-import useCumulateEvents from '../../../hooks/useCumulateEvents';
-import { IEventDataPlayer } from '../../../interfaces/EventDataPlayer';
 
 const Main = styled.div`
   flex: 1;
@@ -30,7 +27,7 @@ const Main = styled.div`
   }
 `;
 
-const ContentContainer = styled.div<{hasPlayerSelected:boolean}>`
+const ContentContainer = styled.div<{hasplayerselected?:boolean}>`
   display: flex;
   flex-direction: row;
   min-height: 80vh;
@@ -38,7 +35,7 @@ const ContentContainer = styled.div<{hasPlayerSelected:boolean}>`
   margin: 0 auto;
   padding: 1rem;
   border:  1px solid rgba(255, 255, 255, 0.2);
-  align-items: ${(props) => (props.hasPlayerSelected ? '' : 'center')};
+  align-items: ${(props) => (props.hasplayerselected ? '' : 'center')};
   @media (max-width: 1200px) {
     flex-direction: column;
   }
@@ -91,6 +88,7 @@ const Fight = (fightResponse: IFightResponse) => {
     dps: { '': 0 },
     hps: { '': 0 },
   });
+  const [comparePlayers, setComparePlayers] = useState<boolean>(false);
   const [player, setSelectedPlayer] = useState<IPlayerDetails | null>(null);
   const [choice, setChoice] = useState<IChoice>(null);
   const { query } = useRouter();
@@ -159,14 +157,6 @@ const Fight = (fightResponse: IFightResponse) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const cumulatedDmg = useCumulateEvents(damageDone)();
-  // const cumulatedHeal = useCumulateEvents(healingDone)();
-
-  // const events: IEventDataPlayer = {
-  //   cumulatedDmg,
-  //   cumulatedHeal,
-  //   ...eventData,
-  // };
   return (
     <>
       <Script
@@ -190,16 +180,16 @@ const Fight = (fightResponse: IFightResponse) => {
             />
           )}
         </NavBar>
-
         {fightData?.player
           && (
-            <ContentContainer hasPlayerSelected={!!player?.guid}>
+            <ContentContainer hasplayerselected={!!player?.guid}>
               <PlayerDrawer
                 parses={parseData}
                 roles={fightData.player}
                 selectPlayer={setPlayer}
                 selectedPlayer={player?.guid || 0}
                 eventData={eventData}
+                setComparePlayers={setComparePlayers}
               />
 
                 {player && (
@@ -207,7 +197,7 @@ const Fight = (fightResponse: IFightResponse) => {
                   <GearIssues
                     player={player}
                   />
-                  <AbilitiesUsage
+                  <AbilitiesOverview
                     player={player}
                     allPlayers={allPlayer()}
                     enemies={enemies}

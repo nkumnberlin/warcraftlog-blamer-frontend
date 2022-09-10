@@ -1,15 +1,22 @@
 import React from 'react';
 import {
-  DrawerBody, DrawerOverlay, DrawerContent, Drawer, DrawerCloseButton, useDisclosure,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  Drawer,
+  DrawerCloseButton,
+  useDisclosure,
+  FormControl,
+  Switch, FormLabel,
 } from '@chakra-ui/react';
 import styled, { css } from 'styled-components';
 import { IPlayerDetails, IRoleDetails } from '../../interfaces/FightResponse';
 import { IRoleEventData } from '../../interfaces/EventDataPlayer';
-import ListOfPlayerRoles from '../../features/player/listOfPlayerRoles';
+import PlayerList from '../../features/player/PlayerList';
 import { DrawerButton } from '../button';
 
-const Container = styled.div<{hasPlayerSelected:boolean}>`
-    ${(props) => !props.hasPlayerSelected && css`
+const Container = styled.div<{hasplayerselected:boolean}>`
+    ${(props) => !props.hasplayerselected && css`
       display: flex;
       justify-content: center;
       margin:0 auto;
@@ -31,20 +38,34 @@ interface IPlayerTypeList {
   parses: {dps: {'': number}, hps:{'': number}}
   selectPlayer: (player: IPlayerDetails) => void;
   selectedPlayer: number;
-  eventData: IRoleEventData
+  eventData: IRoleEventData;
+  setComparePlayers: (val: boolean) => void;
 }
 function PlayerDrawer(props: IPlayerTypeList) {
-  const { selectedPlayer } = props;
+  const { selectedPlayer, setComparePlayers } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Container hasPlayerSelected={!!selectedPlayer}>
+    <Container hasplayerselected={!!selectedPlayer}>
       <DrawerButton hasPlayerSelected={!!selectedPlayer} action={onOpen} text="Click here to Select a Player" />
+      {selectedPlayer ? (
+        <FormControl style={{ paddingLeft: '0.5rem' }} display="flex" flexDir="column">
+          <FormLabel htmlFor="secondPlayer" mb="0">
+            Compare with Second Player?
+          </FormLabel>
+          <Switch
+            onChange={(v) => setComparePlayers(v.target.checked)}
+            style={{ marginTop: '1rem' }}
+            size="md"
+            id="secondPlayer"
+          />
+        </FormControl>
+      ) : null}
       <Drawer closeOnOverlayClick onClose={onClose} placement="left" isOpen={isOpen} size="md">
         <DrawerOverlay />
         <StyledDrawerContent>
           <DrawerCloseButton />
           <StyledDrawerBody className="bb">
-            <ListOfPlayerRoles {...props} />
+            <PlayerList {...props} />
           </StyledDrawerBody>
         </StyledDrawerContent>
       </Drawer>

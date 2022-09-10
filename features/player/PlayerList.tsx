@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import PlayerInfo from './playerInfo';
+import PlayerInfo from './PlayerInfo';
 import { PLAYER_ROLE_ATTRIBUTES } from '../../constants/PLAYER_ROLE_ATTRIBUTES';
 import { IPlayerDetails, IRoleDetails } from '../../interfaces/FightResponse';
 import useCumulateEvents from '../../hooks/useCumulateEvents';
 import { IEventDataPlayer, IRoleEventData } from '../../interfaces/EventDataPlayer';
-import EventDataToPlayer from './eventData';
+import EventDataToPlayer from './EventData';
 
 const PlayerRoleContainer = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ interface IPlayerTypeList {
   eventData: IRoleEventData
 }
 
-function ListOfPlayerRoles({
+function PlayerList({
   roles, selectPlayer, selectedPlayer, parses, eventData,
 }: IPlayerTypeList) {
   return (
@@ -65,4 +65,4 @@ function ListOfPlayerRoles({
   );
 }
 
-export default ListOfPlayerRoles;
+export default PlayerList;

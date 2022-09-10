@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { IPlayerDetails } from '../../interfaces/FightResponse';
-import CLASS_COLORS from '../../constants/CLASS_COLORS';
 import { assignParseToParseColor } from '../../constants/PARSE_COLORS';
-import { Info } from './PlayerColorName';
+import { InfoWithClassColor } from './InfoWithClassColor';
 
 const Player = styled.div`
   display: flex;
@@ -61,11 +60,11 @@ function PlayerInfo({
         width="18px"
         height="18px"
       />
-      <Info style={{ paddingLeft: '8px' }} type={CLASS_COLORS[player.type.toLowerCase() as keyof typeof CLASS_COLORS]}>
+      <InfoWithClassColor style={{ paddingLeft: '8px' }} type={player.type}>
         {player.name}
-      </Info>
-      <Info>{player.specs.map((spec) => spec)}</Info>
-      <Info smallElement>{player.maxItemLevel}</Info>
+      </InfoWithClassColor>
+      <InfoWithClassColor>{player.specs.map((spec) => spec)}</InfoWithClassColor>
+      <InfoWithClassColor smallElement>{player.maxItemLevel}</InfoWithClassColor>
       {player.hasIssues && <IssueContainer>&#9888;</IssueContainer>}
     </Player>
   );

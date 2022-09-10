@@ -19,11 +19,11 @@ export interface ClassResource {
   type: number;
 }
 
-export interface Ability {
+export interface IAbility {
   timestamp: number;
   type: string;
   sourceID: number;
-  amount: number;
+  amount: number | number[];
   targetID: number;
   resourceChange: number;
   abilityGameID: number;
@@ -44,16 +44,8 @@ export interface Ability {
   sameSource: boolean;
 }
 
-export interface TargetOfAbility {
-  targetId: Ability[]
-}
-
 export interface AbilityNumber {
-  abilityNumber: TargetOfAbility;
-}
-
-export interface Auras {
-  auras: Aura[];
+  [abilityNumber: string]: IAbility[];
 }
 
 export interface AbilitiesOfPlayer {
@@ -61,13 +53,16 @@ export interface AbilitiesOfPlayer {
   damage: AbilityNumber;
   resourcechange: AbilityNumber;
   heal: AbilityNumber;
+  cooldowns: AbilityNumber;
 }
 
-export interface AurasAndAbilitiesOfPlayer extends AbilitiesOfPlayer, Auras {
-  name: string;
+export interface IBuffs {
+  [abilityId: string] : IAbility[]
 }
 
 export interface AbilityResponse {
   abilitiesWithIcon: AbilitiesWithIcon[];
-  abilitiesOfPlayer: AurasAndAbilitiesOfPlayer;
+  auras: Aura[];
+  abilities: IBuffs[];
+  buffs: IBuffs[]
 }

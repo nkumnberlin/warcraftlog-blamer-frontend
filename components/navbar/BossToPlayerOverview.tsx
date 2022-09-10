@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import dateFormat from 'dateformat';
 import React from 'react';
 import { IGuild, IPlayerDetails } from '../../interfaces/FightResponse';
+import PlayerInfo from '../../features/player/PlayerInfo';
+import { InfoWithClassColor } from '../../features/player/InfoWithClassColor';
 
 const Container = styled.div`
   display: flex;
@@ -47,15 +49,15 @@ function BossToPlayerOverview({
       <>
         <Item>
           <p> Player: </p>
-          <p>
+          <InfoWithClassColor type={player.type}>
             {player.name}
-          </p>
+          </InfoWithClassColor>
         </Item>
         <Item>
           <p> Spec: </p>
-          <p>
+          <InfoWithClassColor type={player.type}>
             {player.specs[0]}
-          </p>
+          </InfoWithClassColor>
         </Item>
       </>
       )}
