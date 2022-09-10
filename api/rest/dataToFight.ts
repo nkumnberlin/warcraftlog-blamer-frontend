@@ -53,11 +53,11 @@ export function dataToFight(params: IStaticFightData) {
 export async function fetchFightData({
   setFightData, params,
 }:IFetchFightData) {
-  if (process.env.NODE_ENV === 'development') {
-    const data = await axios.get('http://localhost:4000/info').then((res) => res.data);
-    setFightData(data);
-    return;
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   const data = await axios.get('http://localhost:4000/info').then((res) => res.data);
+  //   setFightData(data);
+  //   return;
+  // }
   const data = await dataToFight(params);
   if (data) {
     setFightData(data);

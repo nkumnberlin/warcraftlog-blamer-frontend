@@ -14,13 +14,16 @@ const StyledButton = styled.button`
   }
 `;
 
+const Text = styled.p`
+`;
+
 interface IButton {
   text: string
   action: () => void;
 }
 
-const Button = ({ text, action }: IButton) => (
-  <StyledButton type="button" onClick={action}><span>{text}</span></StyledButton>
+const StandardButton = ({ text, action }: IButton) => (
+  <StyledButton type="button" onClick={action}><Text>{text}</Text></StyledButton>
 );
 
-export default Button;
+export default StandardButton;

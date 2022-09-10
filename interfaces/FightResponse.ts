@@ -1,4 +1,11 @@
+import { IRoleEventData } from './EventDataPlayer';
+
 export interface IGuild {
+  name: string,
+  id: number
+  faction:{
+    name: string
+  }
   server: {
     name: string,
     slug: string,
@@ -50,7 +57,8 @@ export interface IPlayer {
   specs: [string],
   minItemLevel: number,
   maxItemLevel: number,
-  hasIssues: boolean
+  hasIssues: boolean,
+  role?: string
 }
 
 export interface IPlayerDetails extends IPlayer {
@@ -63,7 +71,14 @@ export interface IRoleDetails {
   tanks: IPlayerDetails[];
 }
 
-export interface IFightResponse {
+export interface IEnemies {
+  name: string,
+  id: number,
+  gameID: number
+}
+
+export interface IFightResponse extends IRoleEventData{
   guild: IGuild,
-  player: IRoleDetails
+  player: IRoleDetails,
+  enemies: IEnemies[],
 }

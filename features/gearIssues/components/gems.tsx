@@ -29,8 +29,6 @@ function GemsList({ gear, id }: IGemsList) {
         <GemIssues>
           <GemToolTip gem={gear.gems[id]} />
           <GemError>
-            Gem issue:
-            {' '}
             {gear.gems[id]?.metaGem?.note}
           </GemError>
         </GemIssues>

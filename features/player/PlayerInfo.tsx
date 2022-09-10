@@ -2,26 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { IPlayerDetails } from '../../interfaces/FightResponse';
-import CLASS_COLORS from '../../constants/CLASS_COLORS';
 import { assignParseToParseColor } from '../../constants/PARSE_COLORS';
+import { InfoWithClassColor } from './InfoWithClassColor';
 
 const Player = styled.div`
   display: flex;
   justify-content: flex-start;
-  padding: 0.5rem;
+  padding: 0.25rem;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   :hover {
     background: #444444;
   }
-`;
-
-const Info = styled.p<{type?: string, smallElement?: boolean}>`
-  padding: 0 0.5rem 0 0;
-  min-width: ${(props) => (props.smallElement ? '2.5rem' : '10rem')};
-  max-width: 15rem;
-  color: ${(props) => props.type};
 `;
 
 const Parse = styled.p<{parse?: string}>`
@@ -39,18 +32,31 @@ const IssueContainer = styled.span`
 interface IPlayerList {
   player: IPlayerDetails
   selectPlayer: (player: IPlayerDetails) => void;
+  setSecondPlayer: (player: IPlayerDetails) => void;
+  comparePlayers: boolean;
   parses: {dps: {'': number}, hps: {'':number}}
   roleType: string
 }
 
 function PlayerInfo({
-  player, selectPlayer, parses, roleType,
+  player, selectPlayer, parses, roleType, setSecondPlayer, comparePlayers,
 }: IPlayerList) {
   const parseRaw = parses[roleType === 'healers' ? 'hps' : 'dps'];
   // @ts-ignore
   const parse = Math.trunc(parseRaw[player.name]) || '';
   return (
-    <Player key={player.guid} onClick={() => selectPlayer(player)}>
+    <Player
+      key={player.guid}
+      onClick={() => {
+        // eslint-disable-next-line no-param-reassign
+        player.role = roleType;
+        if (comparePlayers) {
+          setSecondPlayer(player);
+        } else {
+          selectPlayer(player);
+        }
+      }}
+    >
       <Parse parse={assignParseToParseColor(parse)}>
         {parse}
       </Parse>
@@ -60,11 +66,11 @@ function PlayerInfo({
         width="18px"
         height="18px"
       />
-      <Info style={{ paddingLeft: '8px' }} type={CLASS_COLORS[player.type.toLowerCase() as keyof typeof CLASS_COLORS]}>
+      <InfoWithClassColor style={{ paddingLeft: '8px' }} type={player.type}>
         {player.name}
-      </Info>
-      <Info>{player.specs.map((spec) => spec)}</Info>
-      <Info smallElement>{player.maxItemLevel}</Info>
+      </InfoWithClassColor>
+      <InfoWithClassColor>{player.specs.map((spec) => spec)}</InfoWithClassColor>
+      <InfoWithClassColor smallElement>{player.maxItemLevel}</InfoWithClassColor>
       {player.hasIssues && <IssueContainer>&#9888;</IssueContainer>}
     </Player>
   );
