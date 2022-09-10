@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextRouter } from 'next/router';
 import styled from 'styled-components';
+import { useToast } from '@chakra-ui/react';
 import FightDetails from './fightDetail';
 import { IOnlyBossFight } from '../../interfaces';
 
@@ -26,10 +27,18 @@ interface IFight {
 }
 
 function Fight({ fight, router, report }:IFight) {
+  const toast = useToast();
   async function selectFight() {
-    await router.push('/[report]/[fight]',
+    router.push('/[report]/[fight]',
       `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight
         .startTime}&endTime=${fight.endTime}`);
+    toast({
+      title: 'Report will be created.',
+      description: 'Please wait 3 or 5 sec.',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
   }
 
   return (

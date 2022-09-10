@@ -3,6 +3,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import React, { ChangeEvent, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Spinner } from '@chakra-ui/react';
 import Button from '../components/button';
 
 const Main = styled.div`
@@ -79,6 +80,7 @@ const Home: NextPage = () => {
         {/* debugging: */}
         {/* NV98X24RykgfDT7x */}
         <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
+        {wLogUrl && <Spinner style={{ marginTop: '1rem' }} />}
         <SearchContainer>
           <Input
             style={{ color: 'black' }}

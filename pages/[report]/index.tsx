@@ -39,23 +39,25 @@ const BossTryContainer = styled.div`
   }
 `;
 
-const Report = ({ singleReport, bossData }: IRaidId) => (
-  <Main>
-    <NavBar>
-      {singleReport && (
-      <LogMetaData {...singleReport} />
-      )}
-    </NavBar>
-    <ContentContainer>
-      <BossTryContainer>
-        {bossData && (
-        <BossTryList bossData={bossData} />
+function Report({ singleReport, bossData }: IRaidId) {
+  return (
+    <Main>
+      <NavBar>
+        {singleReport && (
+          <LogMetaData {...singleReport} />
         )}
-      </BossTryContainer>
-      <FeatureBar />
-    </ContentContainer>
-  </Main>
-);
+      </NavBar>
+      <ContentContainer>
+        <BossTryContainer>
+          {bossData && (
+            <BossTryList bossData={bossData} />
+          )}
+        </BossTryContainer>
+        <FeatureBar />
+      </ContentContainer>
+    </Main>
+  );
+}
 export default Report;
 
 export const getServerSideProps: GetServerSideProps = async (props) => {

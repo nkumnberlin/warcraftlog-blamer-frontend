@@ -23,11 +23,13 @@ function CooldownBody({
               / 100%
             </Td>
             <Td>
-              {playerClass === 'Warrior' ? classResources[0]?.amount / 10 : classResources[0]?.amount}
+              {playerClass === 'Warrior'
+                ? classResources[0]?.amount / 10 : classResources[0]?.amount}
               {' '}
               of
               {' '}
-              {playerClass === 'Warrior' ? classResources[0]?.max / 10 : classResources[0]?.max}
+              {playerClass === 'Warrior'
+                ? classResources[0]?.max / 10 : classResources[0]?.max}
             </Td>
             <Td>
               {timestamp}
