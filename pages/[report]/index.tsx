@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import { IBossData, ISingleReport, Actions } from '../../interfaces';
 import NavBar from '../../components/navbar';
-import LogMetaData from '../../components/navbar/logMetaData';
-import BossTryList from '../../components/reports/bossTryList';
-import FeatureBar from '../../components/featureBar/featureBar';
+import LogMetaData from '../../components/navbar/LogMetaData';
+import BossTryList from '../../features/reports/bossTryList';
+import FeatureBar from '../../components/featureBar';
 import { fetchStaticBossData } from '../../api/rest';
 
 export interface IRaidId {
@@ -39,23 +39,25 @@ const BossTryContainer = styled.div`
   }
 `;
 
-const Report = ({ singleReport, bossData }: IRaidId) => (
-  <Main>
-    <NavBar>
-      {singleReport && (
-      <LogMetaData {...singleReport} />
-      )}
-    </NavBar>
-    <ContentContainer>
-      <BossTryContainer>
-        {bossData && (
-        <BossTryList bossData={bossData} />
+function Report({ singleReport, bossData }: IRaidId) {
+  return (
+    <Main>
+      <NavBar>
+        {singleReport && (
+          <LogMetaData {...singleReport} />
         )}
-      </BossTryContainer>
-      <FeatureBar />
-    </ContentContainer>
-  </Main>
-);
+      </NavBar>
+      <ContentContainer>
+        <BossTryContainer>
+          {bossData && (
+            <BossTryList bossData={bossData} />
+          )}
+        </BossTryContainer>
+        <FeatureBar />
+      </ContentContainer>
+    </Main>
+  );
+}
 export default Report;
 
 export const getServerSideProps: GetServerSideProps = async (props) => {

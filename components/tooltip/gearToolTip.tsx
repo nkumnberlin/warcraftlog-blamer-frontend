@@ -8,7 +8,7 @@ interface IGearLink {
 }
 
 function gearLinkBuilder(gear: IGear) {
-  let baseURL = 'https://en.tbc.wowhead.com/';
+  let baseURL = 'https://wotlk.wowhead.com/';
   if (gear.id) {
     baseURL += `item=${gear.id}`;
   }

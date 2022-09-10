@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IGear } from '../../../interfaces/FightResponse';
-import GemToolTip from '../../tooltip/gemToolTip';
+import { GemToolTip } from '../../../components/tooltip';
 
 interface IGemsList {
   gear: IGear,
@@ -29,8 +29,6 @@ function GemsList({ gear, id }: IGemsList) {
         <GemIssues>
           <GemToolTip gem={gear.gems[id]} />
           <GemError>
-            Gem issue:
-            {' '}
             {gear.gems[id]?.metaGem?.note}
           </GemError>
         </GemIssues>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IGear } from '../../../interfaces/FightResponse';
-import GearLinkToolTip from '../../tooltip/gearToolTip';
+import GearLinkToolTip from '../../../components/tooltip/gearToolTip';
 
 interface IGearList{
   gear: IGear
@@ -36,15 +36,11 @@ function GearList({ gear, children }:IGearList) {
           <div>
             {gear.metaEnchant && (
             <div>
-              This Item is missing:
-              {' '}
               {gear.metaEnchant.error}
             </div>
             )}
             {gear.metaGem && (
             <div>
-              This Item is missing:
-              {' '}
               {gear.metaGem.error}
             </div>
             )}

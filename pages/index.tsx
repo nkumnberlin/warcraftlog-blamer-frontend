@@ -3,6 +3,8 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useToast } from '@chakra-ui/react';
+import Button from '../components/button';
 
 const Main = styled.div`
   min-height: 100vh;
@@ -45,19 +47,36 @@ const Input = styled.input`
 const Home: NextPage = () => {
   const router = useRouter();
   const [wLogUrl, setWLogUrl] = useState('');
+  const toast = useToast();
+
   const handleWlogUrl = (ev: ChangeEvent<HTMLInputElement>) => {
     setWLogUrl(ev.currentTarget.value);
   };
-
   useEffect(() => {
     if (wLogUrl !== '') {
       const stringArray = wLogUrl.split('/');
       if (stringArray.includes('report') || stringArray.includes('reports')) {
-        const removeParams = stringArray[stringArray.length - 1].split('#')[0];
-        router.push({ pathname: `/${removeParams}` });
+        let position = stringArray.indexOf('reports');
+        if (position === -1) {
+          position = stringArray.indexOf('report');
+        }
+        const removeParams = stringArray[position + 1];
+        if (removeParams.includes('#')) {
+          const newKey = removeParams.split('#')[0];
+          router.push({ pathname: `/${newKey}` });
+        } else {
+          router.push({ pathname: `/${removeParams}` });
+        }
       }
+      toast({
+        title: 'List of Bossfights will be created.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
     }
-  }, [wLogUrl]);
+  },
+  [router, toast, wLogUrl]);
 
   return (
     <Container>
@@ -70,10 +89,11 @@ const Home: NextPage = () => {
       <Main>
         <Header>WarcraftLog Blamer</Header>
         {/* debugging: */}
-        {/* aAXDYPG7MxbQ6WKV */}
-        <button type="button" onClick={() => router.push('/NV98X24RykgfDT7x')}>Goto report</button>
+        {/* NV98X24RykgfDT7x */}
+        <Button text="Go To Debug Report" action={() => router.push('/NV98X24RykgfDT7x')} />
         <SearchContainer>
           <Input
+            style={{ color: 'black' }}
             placeholder="Paste the Report URL here.   Example: https://classic.warcraftlogs.com/reports/id"
             type="text"
             value={wLogUrl}

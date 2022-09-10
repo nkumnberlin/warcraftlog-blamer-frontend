@@ -26,10 +26,21 @@
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "react/react-in-jsx-scope": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".ts", ".tsx", ".js", ".jsx"]
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js",
+          ".jsx"
+        ]
       }
     ],
     "react/jsx-props-no-spreading": "off",
@@ -46,12 +57,21 @@
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": ["Link"],
-        "specialLink": ["hrefLeft", "hrefRight"],
-        "aspects": ["invalidHref", "preferButton"]
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "hrefLeft",
+          "hrefRight"
+        ],
+        "aspects": [
+          "invalidHref",
+          "preferButton"
+        ]
       }
     ],
     "no-nested-ternary": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

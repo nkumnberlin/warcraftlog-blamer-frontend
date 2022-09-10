@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextRouter } from 'next/router';
 import styled from 'styled-components';
+import { useToast } from '@chakra-ui/react';
 import FightDetails from './fightDetail';
 import { IOnlyBossFight } from '../../interfaces';
 
@@ -25,14 +26,30 @@ interface IFight {
   router: NextRouter
 }
 
-const Fight = ({ fight, router, report }:IFight) => (
-  <Item
-    isListItem
-    key={fight.id}
-    onClick={() => router.push('/[report]/[fight]', `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight.startTime}&endTime=${fight.endTime}`)}
-  >
-    <FightDetails {...fight} />
-  </Item>
-);
+function Fight({ fight, router, report }:IFight) {
+  const toast = useToast();
+  async function selectFight() {
+    router.push('/[report]/[fight]',
+      `${report}/${fight.id}?fight=${fight.id}&encounterID=${fight.encounterID}&startTime=${fight
+        .startTime}&endTime=${fight.endTime}`);
+    toast({
+      title: 'Report will be created.',
+      description: 'Please wait 3 or 5 sec.',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  }
+
+  return (
+    <Item
+      isListItem
+      key={fight.id}
+      onClick={() => selectFight()}
+    >
+      <FightDetails {...fight} />
+    </Item>
+  );
+}
 
 export default Fight;
